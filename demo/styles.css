@@ -1,0 +1,343 @@
+/* Layout: a top bar over one full-height stage; the pond sits behind the
+   stage's scroll area and the new-session column is centred in it. */
+:root {
+  --paper: #ffffff;
+  --ink: #1d1b18;
+  --ink-soft: #6f6a63;
+  --line: rgba(29, 27, 24, 0.12);
+  --panel: rgba(255, 255, 255, 0.92);
+  --seal: #b4372b;
+  --inkpond-ink: var(--ink);
+  --font-ui:
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-display: "Songti SC", "STSong", "Noto Serif SC", serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12110f;
+    --ink: #e9e4da;
+    --ink-soft: #9a9388;
+    --line: rgba(233, 228, 218, 0.14);
+    --panel: rgba(28, 26, 23, 0.92);
+    --seal: #d0624f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #12110f;
+  --ink: #e9e4da;
+  --ink-soft: #9a9388;
+  --line: rgba(233, 228, 218, 0.14);
+  --panel: rgba(28, 26, 23, 0.92);
+  --seal: #d0624f;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font: 14px / 1.6 var(--font-ui);
+}
+button,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+:focus-visible {
+  outline: 2px solid var(--seal);
+  outline-offset: 2px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 12px;
+  padding-inline: max(16px, env(safe-area-inset-left, 0px))
+    max(16px, env(safe-area-inset-right, 0px));
+  border-bottom: 1px solid var(--line);
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.brand-seal {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: var(--seal);
+  color: #fff;
+  font: 600 15px / 1 var(--font-display);
+}
+.topbar-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.ghost,
+.select select {
+  border: 1px solid var(--line);
+  background: transparent;
+  border-radius: 999px;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.stage-scroll {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+  padding-inline: max(16px, env(safe-area-inset-left, 0px))
+    max(16px, env(safe-area-inset-right, 0px));
+}
+
+.new-session {
+  min-height: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding-block: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+}
+/* The hero shrinks to its content, so the ink keeps clear of the words
+   rather than of a full-width box. */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+}
+.hero h1 {
+  margin: 0;
+  font: 500 26px / 1.3 var(--font-display);
+  text-wrap: balance;
+}
+.composer {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 14px 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 12px 40px -24px rgba(0, 0, 0, 0.35);
+}
+/* Focus wakes a slow 墨晕 around the composer. */
+.composer {
+  transition:
+    border-color 300ms ease,
+    box-shadow 300ms ease;
+}
+.composer:focus-within {
+  border-color: color-mix(in srgb, var(--ink) 30%, transparent);
+  animation: ink-halo 4.2s ease-in-out infinite;
+}
+@keyframes ink-halo {
+  0%,
+  100% {
+    box-shadow:
+      0 12px 40px -24px rgba(0, 0, 0, 0.35),
+      0 0 0 0 color-mix(in srgb, var(--ink) 0%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 12px 40px -24px rgba(0, 0, 0, 0.35),
+      0 0 32px 4px color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+}
+.composer textarea {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  resize: none;
+  min-height: 24px;
+  max-height: 192px;
+  font-size: 15px;
+  line-height: 24px;
+  field-sizing: content;
+}
+.composer textarea::placeholder {
+  color: var(--ink-soft);
+}
+.composer-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.send {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 16px;
+  cursor: pointer;
+  transition:
+    opacity 200ms ease,
+    transform 160ms ease;
+}
+.send:not(:disabled):hover {
+  transform: scale(1.06);
+}
+.send:not(:disabled):active {
+  transform: scale(0.9);
+}
+.send:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* The first send: the greeting dissolves like ink in water, the pond fades
+   once the drops have bloomed. */
+.hero,
+.stage .inkpond {
+  transition:
+    opacity 600ms ease,
+    transform 600ms ease,
+    filter 600ms ease;
+}
+.leaving .hero {
+  opacity: 0;
+  transform: translateY(-10px);
+  filter: blur(6px);
+}
+.stage.leaving .inkpond {
+  opacity: 0;
+  transition-duration: 650ms;
+  transition-delay: 500ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .composer:focus-within {
+    animation: none;
+  }
+  .send,
+  .hero,
+  .stage .inkpond {
+    transition: none;
+  }
+}
+
+.conversation {
+  max-width: 680px;
+  margin: 0 auto;
+  padding-block: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 100%;
+}
+.messages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+.bubble {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 16px;
+}
+.bubble-user {
+  align-self: flex-end;
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+}
+.bubble-assistant {
+  align-self: flex-start;
+  font-family: var(--font-display);
+  font-size: 15px;
+}
+.conversation .composer {
+  position: sticky;
+  bottom: 16px;
+}
+
+.tuner {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  width: min(240px, calc(100vw - 32px));
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 8px 14px;
+  font-size: 12px;
+}
+.tuner summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.tuner label {
+  display: grid;
+  gap: 2px;
+  margin-top: 10px;
+  color: var(--ink-soft);
+}
+.tuner output {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.tuner input {
+  width: 100%;
+  accent-color: var(--seal);
+}
+.tuner .check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tuner .check input {
+  width: auto;
+  margin: 0;
+}
+.tuner p {
+  margin: 10px 0 4px;
+  color: var(--ink-soft);
+}
