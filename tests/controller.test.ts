@@ -154,7 +154,13 @@ describe("createInkPondController", () => {
     boxes.set(canvas, { height: 600, left: 0, top: 0, width: 800 });
     fireResize(canvas);
 
-    expect(resize).toHaveBeenCalledWith(800, 600, expect.any(Number), 16);
+    // The cell size depends on the tier this machine starts on.
+    expect(resize).toHaveBeenCalledWith(
+      800,
+      600,
+      expect.any(Number),
+      expect.any(Number),
+    );
     controller.destroy();
   });
 });

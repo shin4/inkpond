@@ -1,5 +1,10 @@
 # 墨池 Inkpond
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-dark.png" />
+  <img alt="墨池项目主页：清明上河长卷作底，右侧竖排大字「墨池」与朱印，右下角弧形虹桥上行人往来" src="docs/images/hero-light.png" />
+</picture>
+
 一层可以铺在任何页面背后的水墨汉字底。汉字按笔画疏密排成画面：默认是远山和流动的云雾，也可以换成鲤鱼游动的荷塘，或缓缓展开的清明上河长卷。鼠标划过会泛起水波，点击空白处会落墨，墨迹晕开后慢慢淡去。只用 Canvas 2D，没有运行时依赖。
 
 仓库里带两个演示页：
@@ -16,6 +21,12 @@
 | `qingming` | 清明上河长卷：卷首竖排「清明上河图」与杜牧《清明》、朱印；远山与城楼隔着一带云烟；两岸飞檐屋舍、酒旗灯笼、垂柳；运河上一座弧形虹桥 | 长卷每秒向左展开 7px，船夫撑船往来，行人走街过桥，飞鸟掠过，酒旗柳丝随风摆；在岸上落墨会惊散附近的人 |
 
 荷塘和清明上河用一点淡彩（朱、胭脂、赭石、花青），设 `tint={false}` 就只用墨色。
+
+| 荷塘 | 山水（暗色） |
+| --- | --- |
+| <img alt="荷塘：荷叶与荷花之间，朱红和墨色的鲤鱼游动" src="docs/images/lotus.png" /> | <img alt="山水：暗色背景上两重远山与云雾" src="docs/images/shanshui.png" /> |
+
+项目主页的源码在 `demo/index.html`，本地 `bun run dev` 即可打开；`.github/workflows/pages.yml` 可以把它部署到 GitHub Pages（私有仓库需要付费方案，转为公开或升级后在 Actions 里手动运行即可）。
 
 ## 快速开始
 
