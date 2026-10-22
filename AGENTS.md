@@ -7,7 +7,7 @@
 - 这是一个独立项目，不引入任何其他产品的代码、命名、样式或接口约定。
 - 库本身没有运行时依赖。React 是可选的 peer 依赖，只有 `src/react.tsx` 用到它。不要为了库功能新增依赖。
 - 发布的包只包含 `dist/`。`demo/` 只是演示，库代码不能依赖它。
-- 项目代码使用 MIT 许可（`LICENSE`），字体单独按 OFL 授权。仓库托管在 GitHub `shin4/inkpond`（CI 见 `.github/workflows/ci.yml`）；没有用户明确要求，不要推送、改仓库可见性或发布到 npm。
+- 项目代码使用 MIT 许可（`LICENSE`），字体单独按 OFL 授权。仓库是公开的 GitHub 仓库 `shin4/inkpond`（CI 见 `.github/workflows/ci.yml`，项目主页随 `pages.yml` 部署到 https://shin4.github.io/inkpond/）；没有用户明确要求，不要推送、改仓库可见性或发布到 npm。
 
 ## 分层
 

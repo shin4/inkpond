@@ -1,6 +1,8 @@
 # 墨池 Inkpond
 
 > An ink-wash background of Chinese glyphs for the web. Characters laid out by stroke density become distant hills in mist, a lotus pond with koi, or a slowly unrolling handscroll of *Along the River During the Qingming Festival*. The pointer stirs ripples, a click drops ink, and page content keeps a clear zone. Canvas 2D, zero runtime dependencies, React optional. Inspired by [stackedlol/ascii-sharks](https://github.com/stackedlol/ascii-sharks).
+>
+> **Live demo: <https://shin4.github.io/inkpond/>**
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-dark.png" />
@@ -28,7 +30,7 @@
 | --- | --- |
 | <img alt="荷塘：荷叶与荷花之间，朱红和墨色的鲤鱼游动" src="docs/images/lotus.png" /> | <img alt="山水：暗色背景上两重远山与云雾" src="docs/images/shanshui.png" /> |
 
-项目主页的源码在 `demo/index.html`，本地 `bun run dev` 即可打开；在 Actions 里手动运行 `Pages` 工作流可以把它部署到 GitHub Pages。
+项目主页在线地址：<https://shin4.github.io/inkpond/>（发起会话演示：<https://shin4.github.io/inkpond/session/>）。源码在 `demo/index.html`，本地 `bun run dev` 即可打开；每次推送到 `main` 都会通过 `.github/workflows/pages.yml` 重新部署。
 
 ## 快速开始
 

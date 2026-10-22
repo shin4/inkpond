@@ -1,8 +1,10 @@
 name: Pages
 
-# Run by hand from the Actions tab once Pages is enabled for the repository
-# (Settings → Pages → Source: GitHub Actions).
+# Deploys the project page (demo/) to https://shin4.github.io/inkpond/ on
+# every push to main, or by hand from the Actions tab.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
