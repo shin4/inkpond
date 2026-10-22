@@ -17,3 +17,20 @@ jobs:
       - run: bun run test
       - run: bun run build
       - run: bun run build:demo
+
+  # Installs the package the way users do — packed tarball, and a git
+  # install that builds through `prepare` — into fresh projects, then
+  # imports it in Node, type-checks it under nodenext and builds it with Vite.
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The git install clones this checkout; give it full history.
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run smoke:pack

@@ -61,6 +61,8 @@
 bun run lint && bun run typecheck && bun run test && bun run build && bun run build:demo
 ```
 
+- 改了 `package.json` 的导出、`files`、构建脚本或依赖时，再跑一次 `bun run smoke:pack`（CI 的 `package` 任务也会跑）。
+
 - 改了绘制或交互，要在浏览器里分别看亮色和暗色，三个场景都要看。
 - 淡彩只用 `scene.ts` 的四种颜料（朱、胭脂、赭石、花青），颜色来自 `inkpond.css` 的 CSS 变量，暗色下有单独的取值。
 - 后台的浏览器窗格会节流 `requestAnimationFrame`，动画和降级的检查要放在前台页面或无头 Chrome 里做，否则看到的不动或被降级都可能是假象。

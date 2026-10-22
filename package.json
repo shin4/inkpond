@@ -51,6 +51,7 @@
     "build:demo": "vite build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "smoke:pack": "node scripts/smoke-pack.mjs",
     "lint": "biome check .",
     "lint:fix": "biome check --write ."
   },

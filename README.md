@@ -38,6 +38,7 @@
 bun install
 bun run dev          # 项目主页 http://localhost:5173/ ，发起会话 /session/
 bun run test         # 单元测试
+bun run smoke:pack   # 打包冒烟测试：从打包产物和 git 两种方式安装到新项目，再导入、类型检查、打包
 bun run build        # 输出库到 dist/
 bun run build:demo   # 输出演示页到 dist-demo/
 ```
