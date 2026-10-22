@@ -42,6 +42,17 @@ bun run build        # 输出库到 dist/
 bun run build:demo   # 输出演示页到 dist-demo/
 ```
 
+## 安装
+
+还没有发布到 npm，目前直接从 GitHub 安装，安装时会自动构建出 `dist/`：
+
+```bash
+npm i github:shin4/inkpond
+```
+
+- npm 11 会对带构建脚本的依赖给出 `allow-scripts` 提示，安装照常完成；如果你的 npm 配置禁止依赖运行脚本，执行 `npm approve-scripts inkpond` 允许它即可。
+- 想固定版本，在地址后面加上提交或标签，例如 `github:shin4/inkpond#<commit>`。
+
 ## 在 React 里用
 
 ```tsx

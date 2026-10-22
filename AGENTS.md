@@ -7,6 +7,7 @@
 - 这是一个独立项目，不引入任何其他产品的代码、命名、样式或接口约定。
 - 库本身没有运行时依赖。React 是可选的 peer 依赖，只有 `src/react.tsx` 用到它。不要为了库功能新增依赖。
 - 发布的包只包含 `dist/`。`demo/` 只是演示，库代码不能依赖它。
+- 包还没发布到 npm，用户从 GitHub 安装（`npm i github:shin4/inkpond`），安装时由 `prepare` 运行 `scripts/build.mjs` 生成 `dist/`。这个脚本只能用 Node 自带模块，不能调用 shell 命令（`rm`、`cp`），否则在 Windows 上装不上。
 - 项目代码使用 MIT 许可（`LICENSE`），字体单独按 OFL 授权。仓库是公开的 GitHub 仓库 `shin4/inkpond`（CI 见 `.github/workflows/ci.yml`，项目主页随 `pages.yml` 部署到 https://shin4.github.io/inkpond/）；没有用户明确要求，不要推送、改仓库可见性或发布到 npm。
 
 ## 分层

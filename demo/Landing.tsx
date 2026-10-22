@@ -153,8 +153,8 @@ const Hero = ({ theme, onTheme }: { theme: Theme; onTheme: () => void }) => {
           never stops unrolling.
         </p>
         <div className="install">
-          <code>npm i inkpond</code>
-          <Copy text="npm i inkpond" />
+          <code>npm i github:shin4/inkpond</code>
+          <Copy text="npm i github:shin4/inkpond" />
         </div>
         <ul className="facts">
           <li>Canvas 2D</li>
