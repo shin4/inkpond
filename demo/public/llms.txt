@@ -8,7 +8,7 @@ Key facts:
 
 - Three scenes: `shanshui` (hills in mist, default), `lotus` (lotus pond whose koi avoid the pointer and swim to dropped ink), `qingming` (a handscroll of Along the River During the Qingming Festival that keeps unrolling).
 - Interaction: the pointer stirs ripples, a click or tap drops ink; elements marked `data-inkpond-avoid` keep a clear zone that koi, boats and walkers steer around.
-- Install (not on npm yet): `npm i github:shin4/inkpond`. Then `import "inkpond/inkpond.css"` and either `<InkPond scene="lotus" />` from `inkpond/react` (React 18+, marked "use client" so it renders from Next.js Server Components) or `createInkPond(canvas, { scene })` from `inkpond` in any framework (Vue, Svelte, Angular, plain JS).
+- Install: `npm i inkpond` (or the latest commit: `npm i github:shin4/inkpond`). Then `import "inkpond/inkpond.css"` and either `<InkPond scene="lotus" />` from `inkpond/react` (React 18+, marked "use client" so it renders from Next.js Server Components) or `createInkPond(canvas, { scene })` from `inkpond` in any framework (Vue, Svelte, Angular, plain JS).
 - Programmatic input: `pond.ripple(clientX, clientY, strength)` and `pond.drop(clientX, clientY)`.
 - Performance: glyphs are rasterised once into an atlas; 0.2–0.7 ms of script per calm frame, p95 under 1.9 ms when fully stirred (1920×1080, DPR 1.5). Frame rate drops when calm, stops after 30 s idle, pauses in hidden tabs, and steps down on weak devices or software rendering.
 - Accessibility: the canvas is `aria-hidden`; reduced motion draws a still picture; forced-colours mode hides it.
@@ -32,4 +32,5 @@ Key facts:
 ## Optional
 
 - [Source code](https://github.com/shin4/inkpond): TypeScript, MIT
+- [npm package](https://www.npmjs.com/package/inkpond)
 - [ascii-sharks](https://github.com/stackedlol/ascii-sharks): the project that inspired Inkpond

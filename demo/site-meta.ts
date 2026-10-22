@@ -5,7 +5,7 @@ export const REPO = "https://github.com/shin4/inkpond";
 export const VERSION = __SITE_VERSION__;
 export const UPDATED = __SITE_UPDATED__;
 
-export const INSTALL = "npm i github:shin4/inkpond";
+export const INSTALL = "npm i inkpond";
 
 /** The first sentence: what it is, who it is for, what it solves. */
 export const LEDE =

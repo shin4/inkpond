@@ -7,6 +7,7 @@
 An ink-wash background of Chinese glyphs for the web.
 
 [![CI](https://github.com/shin4/inkpond/actions/workflows/ci.yml/badge.svg)](https://github.com/shin4/inkpond/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/inkpond.svg?color=b4372b)](https://www.npmjs.com/package/inkpond)
 [![License: MIT](https://img.shields.io/badge/license-MIT-b4372b.svg)](LICENSE)
 
 [**Live demo**](https://shin4.github.io/inkpond/en/) · [Session demo](https://shin4.github.io/inkpond/session/)
@@ -42,14 +43,20 @@ The lotus and Qingming scenes use a touch of pale colour (vermilion, rouge, ochr
 
 ## Install
 
-Not on npm yet. Install from GitHub; it builds on install:
+```bash
+npm i inkpond
+```
+
+The React component also needs `react` 18 or later (an optional peer dependency).
+
+<details>
+<summary>Installing the latest commit from GitHub</summary>
 
 ```bash
 npm i github:shin4/inkpond
 ```
 
-<details>
-<summary>With bun, or when npm mentions allow-scripts</summary>
+A GitHub install builds `dist/` on the spot:
 
 - npm 11 notes dependencies with build scripts (`allow-scripts`) and installs anyway; if your config blocks dependency scripts, run `npm approve-scripts inkpond`.
 - bun runs no dependency scripts by default and does not install a dependency's dev dependencies. Your project needs TypeScript, and inkpond must be trusted:
@@ -59,7 +66,6 @@ npm i github:shin4/inkpond
   bun add github:shin4/inkpond
   bun pm trust inkpond
   ```
-- To pin a version, add a commit or tag, e.g. `github:shin4/inkpond#<commit>`.
 
 </details>
 

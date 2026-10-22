@@ -76,7 +76,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "What problem does it solve?",
     },
     {
-      a: `Install with \`${INSTALL}\`; it builds on install. Import the stylesheet with \`import "inkpond/inkpond.css"\`, then put \`<InkPond />\` in a React tree, or call \`createInkPond(canvas)\` on any canvas.`,
+      a: `Install with \`${INSTALL}\` (or the latest commit with \`npm i github:shin4/inkpond\`). Import the stylesheet with \`import "inkpond/inkpond.css"\`, then put \`<InkPond />\` in a React tree, or call \`createInkPond(canvas)\` on any canvas.`,
       q: "How do I install and use it?",
     },
     {
@@ -153,7 +153,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "墨池解决什么问题？",
     },
     {
-      a: `目前从 GitHub 安装：\`${INSTALL}\`，安装时会自动构建。然后引入样式 \`import "inkpond/inkpond.css"\`，在 React 里放一个 \`<InkPond />\`，或者用 \`createInkPond(canvas)\` 挂到任意画布上。`,
+      a: `用 npm 安装：\`${INSTALL}\`（也可以从 GitHub 安装最新提交：\`npm i github:shin4/inkpond\`）。然后引入样式 \`import "inkpond/inkpond.css"\`，在 React 里放一个 \`<InkPond />\`，或者用 \`createInkPond(canvas)\` 挂到任意画布上。`,
       q: "怎么安装和使用？",
     },
     {

@@ -7,6 +7,7 @@
 以字为墨，以页为池：一层铺在网页背后的水墨汉字底。
 
 [![CI](https://github.com/shin4/inkpond/actions/workflows/ci.yml/badge.svg)](https://github.com/shin4/inkpond/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/inkpond.svg?color=b4372b)](https://www.npmjs.com/package/inkpond)
 [![License: MIT](https://img.shields.io/badge/license-MIT-b4372b.svg)](LICENSE)
 
 [**在线演示**](https://shin4.github.io/inkpond/) · [发起会话 Demo](https://shin4.github.io/inkpond/session/)
@@ -42,14 +43,20 @@
 
 ## 安装
 
-还没有发布到 npm，目前从 GitHub 安装，安装时自动构建：
+```bash
+npm i inkpond
+```
+
+用 React 时还需要 `react`（18 及以上，可选的 peer 依赖）。
+
+<details>
+<summary>安装 GitHub 上的最新提交</summary>
 
 ```bash
 npm i github:shin4/inkpond
 ```
 
-<details>
-<summary>用 bun、或 npm 提示 allow-scripts 时</summary>
+从 GitHub 安装时会现场构建 `dist/`：
 
 - npm 11 会对带构建脚本的依赖给出 `allow-scripts` 提示，安装照常完成；如果你的配置禁止依赖运行脚本，执行 `npm approve-scripts inkpond`。
 - bun 默认不运行依赖的脚本，也不安装依赖的开发依赖。需要项目里有 TypeScript，并信任 inkpond：
@@ -59,7 +66,6 @@ npm i github:shin4/inkpond
   bun add github:shin4/inkpond
   bun pm trust inkpond
   ```
-- 固定版本：在地址后加提交或标签，例如 `github:shin4/inkpond#<commit>`。
 
 </details>
 
