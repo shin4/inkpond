@@ -54,7 +54,7 @@ const RAMPS = [
   ["一", "土", "垣", "城", "郭", "墙", "堞", "阙"],
 ] as const;
 /** Boats, people, the bridge, flags, birds and the sun. */
-const LOOSE = "舟船篷帆桨丨～人仆客童驴马车轿梁拱栏一乙之酒灯丿乀〇";
+const LOOSE = "舟船篷帆桨丨～人仆客童驴马车轿梁拱栏一乙之酒灯丿乀〇伞棚丶";
 
 /** Buildings, trees and mountains are the scroll's dark ink. */
 const INK_WEIGHT = 1.8;
@@ -75,7 +75,10 @@ interface Boat {
 type Path = "north" | "south" | "bridge";
 interface Walker {
   id: number;
+  /** World px along a street; unused on the bridge. */
   x: number;
+  /** How far across the bridge, 0 at the south foot to 1 at the north. */
+  t: number;
   path: Path;
   dir: 1 | -1;
   speed: number;
@@ -115,9 +118,13 @@ export const createQingming = (
     birdUp: g("乙"),
     deck: g("梁"),
     flag: g("酒"),
+    eave: g("檐"),
     eaveL: g("丿"),
     eaveR: g("乀"),
     sun: g("〇"),
+    dot: g("丶"),
+    stall: g("棚"),
+    umbrella: g("伞"),
     lantern: g("灯"),
     mast: g("丨"),
     oar: g("桨"),
@@ -151,19 +158,22 @@ export const createQingming = (
   let pigments = new Uint8Array(0);
   let haze: CoarseField = coarseField(0, 0);
   /**
-   * The 虹桥: its north foot at world column `at`, its south foot `span`
-   * columns on, both on row `row`, the arch lifted `rise` rows between.
+   * The 虹桥 as a quadratic curve in world cells, as in the painting: the
+   * south foot on the near bank below, the north foot on the far bank
+   * above, the arch bowed out between them like a rainbow.
    */
-  let bridge = { at: 0, rise: 0, row: 0, span: 1 };
+  let bridge = { cx: 0, cy: 0, length: 1, nx: 0, ny: 0, sx: 0, sy: 0 };
+  /** The moored boat lowering its mast beside the bridge, world cells. */
+  let flagship = { col: 0, row: 0 };
   let fixtures: Fixture[] = [];
   let boats: Boat[] = [];
   let walkers: Walker[] = [];
   let birds: Bird[] = [];
 
   const wrap = (x: number, period: number) => ((x % period) + period) % period;
-  /** Signed distance in cells from the bridge's north foot, wrapped. */
-  const fromBridge = (x: number) => {
-    const d = wrap(x - bridge.at, W);
+  /** Signed distance in cells from world column `at`, wrapped to ±W/2. */
+  const distance = (x: number, at: number) => {
+    const d = wrap(x - at, W);
     return d > W / 2 ? d - W : d;
   };
   const bank = (x: number, seed: number) =>
@@ -172,43 +182,24 @@ export const createQingming = (
    * The river is wide and mostly blank paper across the middle, where a
    * page's content usually sits; the life of the scroll is on its banks.
    */
-  /**
-   * Near the bridge the river narrows and swings through an S-bend, low
-   * on the bridge's left and high on its right, so it crosses the bridge's
-   * row diagonally: both feet stand at one level, the north foot above the
-   * water and the south foot below it, as in the painting.
-   */
-  const riverCenter = (x: number) => {
-    const d = wrap(x - bridge.at - bridge.span / 2, W);
-    const dc = d > W / 2 ? d - W : d;
-    const reach = bridge.span * 1.2;
-    const bend =
-      -Math.tanh(dc / (bridge.span * 0.35)) *
-      Math.exp(-((dc / reach) ** 2)) *
-      rows *
-      0.17;
-    return rows * (0.53 + 0.02 * bank(x, 1.7)) + bend;
+  const riverTop = (x: number) => rows * (0.33 + 0.03 * bank(x, 1.7));
+  const riverBottom = (x: number) => rows * (0.73 + 0.03 * bank(x, 5.3));
+  /** The bridge `t` of the way from the south foot to the north. */
+  const bridgeAt = (t: number) => {
+    const u = 1 - t;
+    const { cx, cy, nx, ny, sx, sy } = bridge;
+    return {
+      col: u * u * sx + 2 * u * t * cx + t * t * nx,
+      row: u * u * sy + 2 * u * t * cy + t * t * ny,
+    };
   };
-  const riverHalf = (x: number) => {
-    const d = wrap(x - bridge.at - bridge.span / 2, W);
-    const dc = d > W / 2 ? d - W : d;
-    return (
-      rows *
-      (0.2 - 0.12 * Math.exp(-((dc / bridge.span) ** 2)) + 0.015 * bank(x, 5.3))
-    );
-  };
-  const riverTop = (x: number) => riverCenter(x) - riverHalf(x);
-  const riverBottom = (x: number) => riverCenter(x) + riverHalf(x);
-  /**
-   * The deck's row `t` of the way from the north foot to the south: level
-   * feet, lifted into a broad arch with a full, rounded crown.
-   */
-  const archRow = (t: number, lift = 1) =>
-    bridge.row - bridge.rise * lift * Math.sin(Math.PI * t) ** 0.75;
-  /** Bridge deck row at world column x (fractional), or null off the span. */
-  const deckRow = (x: number) => {
-    const t = fromBridge(x) / bridge.span;
-    return t < 0 || t > 1 ? null : archRow(t);
+  /** The unit normal at `t`, pointing out of the arch (up and away). */
+  const bridgeNormal = (t: number) => {
+    const { cx, cy, nx, ny, sx, sy } = bridge;
+    const tx = 2 * (1 - t) * (cx - sx) + 2 * t * (nx - cx);
+    const ty = 2 * (1 - t) * (cy - sy) + 2 * t * (ny - cy);
+    const len = Math.hypot(tx, ty) || 1;
+    return { col: ty / len, row: -tx / len };
   };
   const rowToPx = (row: number) => (row - 1) * cell + cell / 2;
   const colToPx = (col: number) => (col - 1) * cell + cell / 2;
@@ -356,13 +347,35 @@ export const createQingming = (
     fixtures = [];
     const rand = rng(W * 31 + rows);
     // The first screen gets the pagoda on the left, the city gate up to
-    // the right and the bridge leaping the river between them.
-    // A broad, shallow, even arch, its crest a sixth of its span high.
-    const span = clamp(Math.round(cols * 0.42), 26, 52);
-    const at = Math.round(cols * 0.55 - span / 2);
-    bridge = { at, rise: clamp(span * 0.17, 4, 8), row: 0, span };
-    const row = riverCenter(at + span / 2);
-    bridge.row = row;
+    // the right and the bridge leaping the river between them: from the
+    // near bank below, bowed up and over, down onto the far bank above.
+    // The feet are far apart against the river's width, so the line
+    // between them lies shallow and the bow rises up over the water rather
+    // than out to one side: a long leg climbing from the near bank, the
+    // crown about level with the far bank, a short drop onto it.
+    const sx = Math.round(cols * 0.4);
+    const sy = riverBottom(sx) + 0.6;
+    const ny0 = riverTop(sx) - 0.6;
+    const nx = sx + Math.round(clamp((sy - ny0) * 1.6, 18, 46));
+    const ny = riverTop(nx) - 0.6;
+    const chord = Math.hypot(nx - sx, ny - sy);
+    // Bow out, up and to the left, by about 0.42 of the chord at the crown
+    // (a quadratic's crown sits halfway to its control point).
+    const out = { col: (ny - sy) / chord, row: -(nx - sx) / chord };
+    const bow = chord * 0.36 * 2;
+    bridge = {
+      cx: (sx + nx) / 2 + out.col * bow,
+      cy: (sy + ny) / 2 + out.row * bow,
+      length: 1,
+      nx,
+      ny,
+      sx,
+      sy,
+    };
+    flagship = {
+      col: (sx + nx) / 2 + 8,
+      row: (riverTop(nx + 8) + riverBottom(nx + 8)) / 2 + 2,
+    };
     const gate = Math.round(cols * 0.58);
     const tower = Math.round(cols * 0.24);
 
@@ -437,16 +450,13 @@ export const createQingming = (
       let x = rand() * 4;
       while (x < W - 6) {
         const width = 4 + Math.floor(rand() * 5);
-        const foot = fromBridge(x) - (side === "north" ? 0 : bridge.span);
-        // North of the river under the arch, a house would stand in the
-        // deck's way: leave the bank there to the bridge.
-        const d = fromBridge(x);
-        const underArch =
-          side === "north" &&
-          d > -width - 2 &&
-          d < bridge.span + 2 &&
-          Math.floor(riverTop(x)) - 6 < bridge.row - bridge.rise + 1;
-        if ((foot > -width - 4 && foot < 4) || underArch) {
+        // The far bank's bridgehead, and the market at the near one.
+        const clear =
+          side === "north"
+            ? distance(x, bridge.cx) > -width - 4 && distance(x, bridge.nx) < 5
+            : distance(x, bridge.sx) > -width - 14 &&
+              distance(x, bridge.sx) < 6;
+        if (clear) {
           x += 2;
           continue;
         }
@@ -487,36 +497,84 @@ export const createQingming = (
     street("north");
     street("south");
 
-    // 虹桥: a timber arch of loose glyphs from bank to bank — railing
-    // above, a deck, the beams of the arch beneath tied by struts, piers
-    // and short approaches at either foot, the river open below.
-    const steps = Math.ceil(span / 0.34);
-    for (let k = 0; k <= steps; k++) {
-      const t = k / steps;
-      const col = at + span * t;
-      const deck = archRow(t);
-      fix(col, deck, G.deck, 1.4, 0.95, INK);
-      fix(col, deck + 0.85, G.beam, 1.2, 0.8, ZHE);
-      if (k % 2 === 0) fix(col, deck - 0.95, G.rail, 0.8, 0.65, INK);
-      // The lower arch of the timber frame, and struts up to the deck.
-      const under = archRow(t, 0.72) + 1.6;
-      if (under > deck + 1.6) {
-        fix(col, under, G.beam, 1, 0.6, ZHE);
-        if (k % 7 === 0) {
-          for (let r = deck + 1.6; r < under - 0.4; r += 0.7) {
-            fix(col, r, G.mast, 0.8, 0.5, ZHE);
-          }
-        }
+    // 虹桥: a band of loose glyphs along the curve, as the painting shows
+    // the bridge's side — railing on the outside, the deck, and two courses
+    // of the timber arch beneath, with short approaches at either foot.
+    const samples = 240;
+    const lengths = [0];
+    let prev = bridgeAt(0);
+    for (let k = 1; k <= samples; k++) {
+      const p = bridgeAt(k / samples);
+      lengths.push(
+        (lengths[k - 1] ?? 0) + Math.hypot(p.col - prev.col, p.row - prev.row),
+      );
+      prev = p;
+    }
+    bridge.length = lengths[samples] ?? 1;
+    let k = 0;
+    for (let d = 0, n = 0; d <= bridge.length; d += 0.32, n++) {
+      while (k < samples && (lengths[k + 1] ?? 0) < d) k++;
+      const t = k / samples;
+      const p = bridgeAt(t);
+      const o = bridgeNormal(t);
+      const at = (off: number) =>
+        [p.col + o.col * off, p.row + o.row * off] as const;
+      const [rc, rr] = at(1);
+      if (n % 2 === 0) fix(rc, rr, G.rail, 0.85, 0.7, INK);
+      fix(p.col, p.row, G.deck, 1.4, 0.95, INK);
+      const [b1c, b1r] = at(-0.85);
+      fix(b1c, b1r, G.beam, 1.25, 0.85, ZHE);
+      const [b2c, b2r] = at(-1.7);
+      fix(b2c, b2r, G.beam, 1.05, 0.6, ZHE);
+      if (n % 6 === 0) {
+        const [sc, sr] = at(-2.4);
+        fix(sc, sr, G.mast, 0.8, 0.45, ZHE);
       }
     }
-    for (const [col, dir] of [
-      [at, -1],
-      [at + span, 1],
+    for (const [col, row, dir] of [
+      [sx, sy, -1],
+      [nx, ny, 1],
     ] as const) {
       for (let r = 1; r < 3; r++) fix(col, row + r * 0.75, G.mast, 1, 0.7, ZHE);
-      for (let k = 1; k <= 4; k++) {
-        fix(col + dir * k * 0.45, row, G.deck, 1.1, 0.8 - k * 0.1, INK);
+      for (let j = 1; j <= 5; j++) {
+        fix(col + dir * j * 0.45, row, G.deck, 1.15, 0.85 - j * 0.1, INK);
       }
+    }
+
+    // The market at the near bridgehead: stalls and umbrellas, carts and
+    // horses, and a standing crowd that sways as it talks.
+    const mrand = rng(sx * 13 + rows);
+    const ground = riverBottom(sx) + 1.2;
+    for (let j = 0; j < 30; j++) {
+      const col = sx - 12 + mrand() * 15;
+      const row = ground + mrand() * 4.5;
+      const r = mrand();
+      const glyph =
+        r < 0.12
+          ? G.umbrella
+          : r < 0.22
+            ? G.stall
+            : (crowd[Math.floor(mrand() * crowd.length)] ?? G.person);
+      const big = glyph === G.umbrella || glyph === G.stall;
+      fix(
+        col,
+        row,
+        glyph,
+        big ? 1.3 : 0.8,
+        0.9,
+        r < 0.3 ? ZHE : r > 0.9 ? ZHU : INK,
+        big ? 0 : 0.6,
+      );
+    }
+
+    // 近大远小: a few great eaves along the bottom edge, the nearest roofs.
+    for (let col = 6; col < W - 8; col += 26 + Math.floor(rand() * 18)) {
+      const w = 3 + Math.floor(rand() * 3);
+      for (let j = 0; j < w; j++) {
+        fix(col + j * 2.1, rows - 2.4, G.eave, 2.4, 0.55, INK);
+      }
+      fix(col - 1.6, rows - 3.1, G.eaveL, 2, 0.6, INK);
+      fix(col + w * 2.1 - 0.4, rows - 3.1, G.eaveR, 2, 0.6, INK);
     }
 
     fixtures.sort((a, b) => a.x - b.x);
@@ -554,16 +612,14 @@ export const createQingming = (
           pigment: r < 0.1 ? ZHU : r < 0.2 ? ZHE : INK,
           rush: 0,
           speed: path === "bridge" ? 4 + rand() * 4 : 6 + rand() * 8,
-          x:
-            path === "bridge"
-              ? (bridge.at + bridge.span * (0.05 + rand() * 0.9) - 0.5) * cell
-              : rand() * W * cell,
+          t: 0.04 + rand() * 0.92,
+          x: rand() * W * cell,
         };
       });
     walkers = [
       ...people("north", Math.round(W / 5)),
       ...people("south", Math.round(W / 6)),
-      ...people("bridge", 18),
+      ...people("bridge", 30),
     ];
     birds = Array.from({ length: 6 }, (_, k) => ({
       phase: rand() * 6,
@@ -580,11 +636,18 @@ export const createQingming = (
     return x < -margin || x > env.width + margin ? null : x;
   };
 
-  const walkerRow = (w: Walker) => {
+  /** Where a walker stands: world px across, row down. */
+  const walkerAt = (w: Walker) => {
+    if (w.path === "bridge") {
+      const p = bridgeAt(w.t);
+      const o = bridgeNormal(w.t);
+      return { row: p.row + o.row * 1.2, x: colToPx(p.col + o.col * 1.2) };
+    }
     const col = w.x / cell + 0.5;
-    if (w.path === "bridge") return (deckRow(col) ?? bridge.row) - 1.3;
-    if (w.path === "north") return riverTop(col) - 0.8;
-    return riverBottom(col) + 1.8;
+    return {
+      row: w.path === "north" ? riverTop(col) - 0.8 : riverBottom(col) + 1.8,
+      x: w.x,
+    };
   };
 
   return {
@@ -739,16 +802,62 @@ export const createQingming = (
           );
         }
       }
+      // The great boat beside the bridge, its crew lowering the mast.
+      const fx = onScreen(colToPx(flagship.col), env, cell * 12);
+      if (fx !== null) {
+        const bob = Math.sin(env.time * 1.1) * 1.5;
+        const y = rowToPx(flagship.row) + bob;
+        const gap = cell * 0.7 * 1.6;
+        for (let k = -4; k <= 4; k++) {
+          emit(hulls[(k + 4) % 2] ?? 0, fx + k * gap, y, 0.9, 1.6, ZHE);
+          if (Math.abs(k) < 4) {
+            emit(G.roof, fx + k * gap, y - cell * 1.35, 0.85, 1.5, INK);
+          }
+        }
+        // The mast laid over toward the bridge, its crew hauling on it.
+        for (let k = 0; k < 9; k++) {
+          emit(
+            G.eaveL,
+            fx - k * cell * 0.62,
+            y - cell * (2.2 + k * 0.42),
+            0.75,
+            1,
+            INK,
+          );
+        }
+        const haul = Math.sin(env.time * 1.6) * cell * 0.15;
+        for (const [dx, dy] of [
+          [-2.6, 2.3],
+          [-1.2, 2.4],
+          [0.4, 2.3],
+          [1.9, 2.4],
+          [3.4, 2.3],
+          [-4.4, 0.9],
+        ] as const) {
+          emit(G.person, fx + dx * cell + haul, y - dy * cell, 0.9, 0.8, INK);
+        }
+        for (let k = 0; k < 4; k++) {
+          emit(
+            G.dot,
+            fx - cell * (1.5 + k),
+            y - cell * (2.6 + k * 0.8),
+            0.5,
+            0.7,
+            INK,
+          );
+        }
+      }
       // The bridge and the other fixtures after the boats, which pass
       // beneath it.
       const to = from + env.width + cell * 6;
       visit(from, Math.min(to, span));
       if (to > span) visit(0, to - span);
       for (const w of walkers) {
-        const sx = onScreen(w.x, env);
+        const at = walkerAt(w);
+        const sx = onScreen(at.x, env);
         if (sx === null) continue;
         const stride = Math.abs(Math.sin(w.phase)) * 1.6;
-        emit(w.glyph, sx, rowToPx(walkerRow(w)) - stride, 0.9, 0.78, w.pigment);
+        emit(w.glyph, sx, rowToPx(at.row) - stride, 0.9, 0.78, w.pigment);
       }
       // A low sun far off: it drifts with a tenth of the scroll's pace.
       const sun = wrap(env.width * 0.84 - env.pan * 0.1, span);
@@ -773,9 +882,10 @@ export const createQingming = (
       }
       for (const w of walkers) {
         // Fresh ink on the bank sends anyone nearby running.
-        const sx = onScreen(w.x, env);
+        const at = walkerAt(w);
+        const sx = onScreen(at.x, env);
         if (sx !== null) {
-          const y = rowToPx(walkerRow(w));
+          const y = rowToPx(at.row);
           for (const d of env.drops) {
             if (d.age > 1.5) continue;
             const dx = sx - d.x;
@@ -788,16 +898,14 @@ export const createQingming = (
         w.rush = Math.max(0, w.rush - dt * 25);
         const speed = w.speed + w.rush;
         w.phase += dt * speed * 0.35;
-        w.x += w.dir * speed * dt;
         if (w.path === "bridge") {
-          // Walk the span, turning back at either foot.
-          const from = (bridge.at + bridge.span * 0.04 - 0.5) * cell;
-          const to = (bridge.at + bridge.span * 0.96 - 0.5) * cell;
-          if (w.x < from || w.x > to) {
-            w.dir = w.x < from ? 1 : -1;
-            w.x = clamp(w.x, from, to);
+          // Walk the arch, turning back at either foot.
+          w.t += (w.dir * speed * dt) / (bridge.length * cell);
+          if (w.t < 0.03 || w.t > 0.97) {
+            w.dir = w.t < 0.03 ? 1 : -1;
+            w.t = clamp(w.t, 0.03, 0.97);
           }
-        } else w.x = wrap(w.x, span);
+        } else w.x = wrap(w.x + w.dir * speed * dt, span);
       }
     },
   };

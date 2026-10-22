@@ -58,6 +58,8 @@ export const App = () => {
   const [strength, setStrength] = useState(0.45);
   const [waveSpeed, setWaveSpeed] = useState(1);
   const [leaving, setLeaving] = useState(false);
+  /** Hide the greeting and composer to see the whole picture. */
+  const [showInput, setShowInput] = useState(true);
   const pondRef = useRef<Pond | null>(null);
 
   useEffect(() => {
@@ -114,7 +116,16 @@ export const App = () => {
             >
               新会话
             </button>
-          ) : null}
+          ) : (
+            <button
+              aria-pressed={!showInput}
+              className="ghost"
+              onClick={() => setShowInput((shown) => !shown)}
+              type="button"
+            >
+              {showInput ? "隐藏输入" : "显示输入"}
+            </button>
+          )}
           <label className="select">
             <span className="sr-only">画面</span>
             <select
@@ -157,7 +168,9 @@ export const App = () => {
         ) : null}
         <div className="stage-scroll">
           {empty ? (
-            <NewSession leaving={leaving} onSend={send} pondRef={pondRef} />
+            showInput ? (
+              <NewSession leaving={leaving} onSend={send} pondRef={pondRef} />
+            ) : null
           ) : (
             <Conversation messages={messages} onSend={send} />
           )}
