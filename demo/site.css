@@ -106,6 +106,14 @@ pre {
 .bar-links a {
   text-decoration: none;
 }
+.lang {
+  font-weight: 600;
+}
+.faq dd pre {
+  margin: 14px 0 0;
+  border: 1px solid var(--line);
+  font-size: 12.5px;
+}
 .theme {
   border: 1px solid var(--line);
   background: transparent;

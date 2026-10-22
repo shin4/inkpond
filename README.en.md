@@ -9,7 +9,7 @@ An ink-wash background of Chinese glyphs for the web.
 [![CI](https://github.com/shin4/inkpond/actions/workflows/ci.yml/badge.svg)](https://github.com/shin4/inkpond/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-b4372b.svg)](LICENSE)
 
-[**Live demo**](https://shin4.github.io/inkpond/) · [Session demo](https://shin4.github.io/inkpond/session/)
+[**Live demo**](https://shin4.github.io/inkpond/en/) · [Session demo](https://shin4.github.io/inkpond/session/)
 
 </div>
 
@@ -82,6 +82,7 @@ import "inkpond/inkpond.css";
 - Elements with `data-inkpond-avoid` get a clear zone, including ones that appear later.
 - `active` says whether this view is on screen; a background tab pauses by itself.
 - Other options are read once on mount; change the `key` to remount with new ones.
+- The component is marked `"use client"`, so it renders straight from a Next.js App Router Server Component. For Vue and Svelte, see the [FAQ](https://shin4.github.io/inkpond/en/faq/).
 
 ### Without React
 
@@ -187,7 +188,7 @@ After changing the glyphs any scene uses, rebuild all subsets from the original 
 scripts/build-font.sh path/to/SourceHanSerifSC-Medium.otf
 ```
 
-The project page source is `demo/index.html` and the FAQ is `demo/faq/`; the build prerenders both to static HTML with structured data, next to an [llms.txt](https://shin4.github.io/inkpond/llms.txt) for AI assistants. Every push to `main` redeploys them through `.github/workflows/pages.yml`.
+The project page source is `demo/index.html`, the FAQ is `demo/faq/` and the English versions are in `demo/en/`; the build prerenders them to static HTML with structured data, next to an [llms.txt](https://shin4.github.io/inkpond/llms.txt) and the complete [llms-full.txt](https://shin4.github.io/inkpond/llms-full.txt) for AI assistants. Every push to `main` redeploys them through `.github/workflows/pages.yml`.
 
 ## Thanks
 

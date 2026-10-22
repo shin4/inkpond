@@ -4,10 +4,12 @@ import "../src/inkpond.css";
 import "./site.css";
 import { Landing } from "./Landing";
 
+const lang = document.documentElement.lang === "en" ? "en" : "zh";
+
 const root = document.getElementById("root");
 const app = (
   <StrictMode>
-    <Landing />
+    <Landing lang={lang} />
   </StrictMode>
 );
 // The build prerenders the page (scripts/prerender.mjs); dev starts empty.

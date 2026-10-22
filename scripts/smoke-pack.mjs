@@ -73,6 +73,13 @@ try {
     for (const file of ["index.js", "react.js", "inkpond.css", "assets"]) {
       if (!dist.includes(file)) throw new Error(`dist/ is missing ${file}`);
     }
+    const react = readFileSync(
+      join(app, "node_modules/inkpond/dist/react.js"),
+      "utf8",
+    );
+    if (!/^(\/\/.*\n)*"use client";/.test(react)) {
+      throw new Error('dist/react.js must start with "use client"');
+    }
 
     step("Node imports");
     run(

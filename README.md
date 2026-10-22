@@ -82,6 +82,7 @@ import "inkpond/inkpond.css";
 - 带 `data-inkpond-avoid` 的元素周围自动留白，后来才出现的元素也会被识别。
 - `active` 表示这一块是否在屏幕上；标签页切到后台会自动暂停。
 - 其他选项只在挂载时读一次，想改就换一个 `key` 重新挂载。
+- 组件已标记 `"use client"`，可以直接放进 Next.js App Router 的服务端组件里。Vue、Svelte 的接入示例见 [常见问题](https://shin4.github.io/inkpond/faq/)。
 
 ### 不用 React
 
@@ -224,7 +225,7 @@ scripts/         构建、打包冒烟测试、字体子集生成
 
 </details>
 
-项目主页源码在 `demo/index.html`，常见问题在 `demo/faq/`；构建时会预渲染成静态 HTML 并附带结构化数据，另有给 AI 读的 [llms.txt](https://shin4.github.io/inkpond/llms.txt)。每次推送到 `main` 由 `.github/workflows/pages.yml` 重新部署。
+项目主页源码在 `demo/index.html`，常见问题在 `demo/faq/`，英文版在 `demo/en/`；构建时会预渲染成静态 HTML 并附带结构化数据，另有给 AI 读的 [llms.txt](https://shin4.github.io/inkpond/llms.txt) 和完整版 [llms-full.txt](https://shin4.github.io/inkpond/llms-full.txt)。每次推送到 `main` 由 `.github/workflows/pages.yml` 重新部署。
 
 ## 致谢
 

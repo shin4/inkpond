@@ -18,7 +18,7 @@
 | `src/scene.ts`、`src/scenes/` | 场景契约和各场景（山水、荷塘、清明上河）：画面布局、慢变层、鱼船行人 | 同 engine；也不能碰 canvas，只通过 `emit` 交出要画的字 |
 | `src/controller.ts` | 帧循环、鼠标输入、留白区、字体加载、主题、可见性、性能档位 | 写死页面结构 |
 | `src/tiers.ts` | 档位和降级判断，纯函数 | 访问 DOM |
-| `src/react.tsx` | 薄封装，只负责挂载和传入 `active` | 实现任何逻辑 |
+| `src/react.tsx` | 薄封装，只负责挂载和传入 `active`；文件开头的 `"use client"` 不能删，Next.js 等服务端组件框架靠它识别 | 实现任何逻辑 |
 
 新功能先放进 engine 或 controller，并通过选项暴露出来，不用 React 也必须能用。
 
@@ -44,8 +44,9 @@
 - `ripple()` / `drop()` 在暂停、减少动画和静帧档下不生效，生效时要唤醒休眠的帧循环。
 - 演示里的消息只在用户点击发送或按 Enter 时发出。
 - `demo/index.html` 是项目主页，`demo/session/` 是发起会话演示；主页上的每个画布只在进入视口时 `active`，离开就暂停。
+- 项目主页和 FAQ 各有中文（根路径）和英文（`demo/en/`）两版，文案在 `demo/copy.ts` 和 `demo/Faq.tsx` 里按语言并列，改一种语言就同步另一种；页面互相用 `hreflang` 标注。
 - 项目主页和 `demo/faq/` 在构建时预渲染（`scripts/prerender.mjs` 加载 `demo/prerender.tsx`），让不执行 JavaScript 的爬虫和 AI 也能读到正文；浏览器端用 `hydrateRoot` 接管，所以首屏渲染不能读 `localStorage`、`window` 等只在浏览器里才有的东西，要放进 effect。
-- 首页第一句、安装命令和网址集中在 `demo/site-meta.ts`；FAQ 问答在 `demo/Faq.tsx`，页面和 FAQPage 结构化数据都由它生成。`demo/public/llms.txt` 是给 AI 的简明说明，是手写的：改了场景、安装方式、许可或性能数字时同步更新它和 FAQ。
+- 首页第一句、安装命令和网址集中在 `demo/site-meta.ts`；FAQ 问答在 `demo/Faq.tsx`，页面和 FAQPage 结构化数据都由它生成。`demo/public/llms.txt` 是给 AI 的简明说明，是手写的；`llms-full.txt` 由构建从英文 README 和两种语言的 FAQ 生成：改了场景、安装方式、许可或性能数字时同步更新它和 FAQ。
 - macOS 文件系统不区分大小写：不要在同一目录里放只差大小写的文件名（例如 `landing.tsx` 和 `Landing.tsx`），会互相覆盖。
 
 ## 字表与字体

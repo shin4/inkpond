@@ -1,3 +1,7 @@
+// A client component: React Server Components frameworks (Next.js App
+// Router) must not render it on the server.
+"use client";
+
 import { useEffect, useRef } from "react";
 import {
   createInkPond,

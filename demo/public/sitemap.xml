@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://shin4.github.io/inkpond/</loc></url>
-  <url><loc>https://shin4.github.io/inkpond/faq/</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://shin4.github.io/inkpond/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://shin4.github.io/inkpond/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://shin4.github.io/inkpond/en/" />
+  </url>
+  <url>
+    <loc>https://shin4.github.io/inkpond/en/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://shin4.github.io/inkpond/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://shin4.github.io/inkpond/en/" />
+  </url>
+  <url>
+    <loc>https://shin4.github.io/inkpond/faq/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://shin4.github.io/inkpond/faq/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://shin4.github.io/inkpond/en/faq/" />
+  </url>
+  <url>
+    <loc>https://shin4.github.io/inkpond/en/faq/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://shin4.github.io/inkpond/faq/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://shin4.github.io/inkpond/en/faq/" />
+  </url>
   <url><loc>https://shin4.github.io/inkpond/session/</loc></url>
 </urlset>

@@ -8,7 +8,7 @@ Key facts:
 
 - Three scenes: `shanshui` (hills in mist, default), `lotus` (lotus pond whose koi avoid the pointer and swim to dropped ink), `qingming` (a handscroll of Along the River During the Qingming Festival that keeps unrolling).
 - Interaction: the pointer stirs ripples, a click or tap drops ink; elements marked `data-inkpond-avoid` keep a clear zone that koi, boats and walkers steer around.
-- Install (not on npm yet): `npm i github:shin4/inkpond`. Then `import "inkpond/inkpond.css"` and either `<InkPond scene="lotus" />` from `inkpond/react` (React 18+) or `createInkPond(canvas, { scene })` from `inkpond` in any framework.
+- Install (not on npm yet): `npm i github:shin4/inkpond`. Then `import "inkpond/inkpond.css"` and either `<InkPond scene="lotus" />` from `inkpond/react` (React 18+, marked "use client" so it renders from Next.js Server Components) or `createInkPond(canvas, { scene })` from `inkpond` in any framework (Vue, Svelte, Angular, plain JS).
 - Programmatic input: `pond.ripple(clientX, clientY, strength)` and `pond.drop(clientX, clientY)`.
 - Performance: glyphs are rasterised once into an atlas; 0.2–0.7 ms of script per calm frame, p95 under 1.9 ms when fully stirred (1920×1080, DPR 1.5). Frame rate drops when calm, stops after 30 s idle, pauses in hidden tabs, and steps down on weak devices or software rendering.
 - Accessibility: the canvas is `aria-hidden`; reduced motion draws a still picture; forced-colours mode hides it.
@@ -20,11 +20,13 @@ Key facts:
 
 - [README (中文)](https://github.com/shin4/inkpond/blob/main/README.md): scenes, install, usage, options, performance, fonts
 - [README (English)](https://github.com/shin4/inkpond/blob/main/README.en.md): the same in English
-- [FAQ 常见问题](https://shin4.github.io/inkpond/faq/): what it is, who it is for, frameworks, performance, mobile, accessibility, licence
+- [Full docs in one file](https://shin4.github.io/inkpond/llms-full.txt): the English README plus both FAQs, with Next.js, Vue and Svelte examples
+- [FAQ (English)](https://shin4.github.io/inkpond/en/faq/): what it is, who it is for, frameworks, Next.js, Vue, Svelte, Vanta.js and tsParticles, performance, mobile, accessibility, licence
+- [常见问题（中文）](https://shin4.github.io/inkpond/faq/): the same in Chinese
 
 ## Demos
 
-- [Project page](https://shin4.github.io/inkpond/): all three scenes live, with tint and ink-depth controls
+- [Project page (English)](https://shin4.github.io/inkpond/en/) and [项目主页（中文）](https://shin4.github.io/inkpond/): all three scenes live, with tint and ink-depth controls
 - [Session demo](https://shin4.github.io/inkpond/session/): the background behind an AI chat start screen
 
 ## Optional
