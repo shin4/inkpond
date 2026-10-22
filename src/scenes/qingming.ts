@@ -4,13 +4,14 @@
  * a long walled city with a three-tiered gate tower and a pagoda, their
  * feet sinking into a band of haze; tiled roofs and 赭石 walls line both banks of a wide river, wine
  * flags and lanterns hang from the shops and willows trail their strands;
- * the 虹桥 arches over a canal on the near bank. Boats with crews work the
+ * the 虹桥 leaps the river from one bank to the other the way it does in
+ * the painting, an arch thronged with people. Boats with crews work the
  * river, people throng the streets and the bridge, birds cross the sky, and
  * ink dropped on the bank scatters whoever is near.
  *
  * The picture has two layers. The grid carries what is broad and still —
  * land, water, mountains, houses — and loose glyphs carry what wants a
- * smooth line or moves: the bridge's arch, the inscription, flags, strands,
+ * smooth line or moves: the bridge's arch, flags, strands,
  * boats, people and birds. The world is a strip wider than any screen that
  * wraps seamlessly; its first screen is composed to be seen first.
  */
@@ -52,15 +53,13 @@ const RAMPS = [
   ["一", "二", "山", "丘", "岭", "峦", "峰", "嶂"],
   ["一", "土", "垣", "城", "郭", "墙", "堞", "阙"],
 ] as const;
-const TITLE = "清明上河图";
-/** Boats, people, the bridge, flags, birds and the seals. */
-const LOOSE = `舟船篷帆桨丨～人仆客童驴马车轿梁拱栏一乙之酒灯囗丿乀〇${TITLE}`;
+/** Boats, people, the bridge, flags, birds and the sun. */
+const LOOSE = "舟船篷帆桨丨～人仆客童驴马车轿梁拱栏一乙之酒灯丿乀〇";
 
 /** Buildings, trees and mountains are the scroll's dark ink. */
 const INK_WEIGHT = 1.8;
 /** CSS px the scroll travels each second. */
 const PAN_SPEED = 7;
-const CANAL_HALF = 5;
 
 interface Boat {
   id: number;
@@ -118,7 +117,6 @@ export const createQingming = (
     flag: g("酒"),
     eaveL: g("丿"),
     eaveR: g("乀"),
-    frame: g("囗"),
     sun: g("〇"),
     lantern: g("灯"),
     mast: g("丨"),
@@ -152,17 +150,20 @@ export const createQingming = (
   let kinds = new Uint8Array(0);
   let pigments = new Uint8Array(0);
   let haze: CoarseField = coarseField(0, 0);
-  let canal = 0;
-  let bridge = { left: 0, right: 0, row: 0, rise: 0 };
+  /**
+   * The 虹桥: its north foot at world column `at`, its south foot `span`
+   * columns on, each on its bank's row, the arch lifted `rise` rows.
+   */
+  let bridge = { at: 0, north: 0, rise: 0, south: 0, span: 1 };
   let fixtures: Fixture[] = [];
   let boats: Boat[] = [];
   let walkers: Walker[] = [];
   let birds: Bird[] = [];
 
   const wrap = (x: number, period: number) => ((x % period) + period) % period;
-  /** Signed distance in cells from the canal, wrapped to ±W/2. */
-  const fromCanal = (x: number) => {
-    const d = wrap(x - canal, W);
+  /** Signed distance in cells from the bridge's north foot, wrapped. */
+  const fromBridge = (x: number) => {
+    const d = wrap(x - bridge.at, W);
     return d > W / 2 ? d - W : d;
   };
   const bank = (x: number, seed: number) =>
@@ -173,11 +174,18 @@ export const createQingming = (
    */
   const riverTop = (x: number) => rows * (0.33 + 0.03 * bank(x, 1.7));
   const riverBottom = (x: number) => rows * (0.73 + 0.03 * bank(x, 5.3));
+  /**
+   * The deck's row `t` of the way from the north foot to the south: the
+   * straight line between the banks, lifted into an arch.
+   */
+  const archRow = (t: number, lift = 1) =>
+    bridge.north +
+    (bridge.south - bridge.north) * t -
+    bridge.rise * lift * Math.sin(Math.PI * t);
   /** Bridge deck row at world column x (fractional), or null off the span. */
   const deckRow = (x: number) => {
-    const t = (fromCanal(x) - bridge.left) / (bridge.right - bridge.left);
-    if (t < 0 || t > 1) return null;
-    return bridge.row - bridge.rise * Math.sin(Math.PI * t);
+    const t = fromBridge(x) / bridge.span;
+    return t < 0 || t > 1 ? null : archRow(t);
   };
   const rowToPx = (row: number) => (row - 1) * cell + cell / 2;
   const colToPx = (col: number) => (col - 1) * cell + cell / 2;
@@ -294,26 +302,6 @@ export const createQingming = (
     }
   };
 
-  /** The scroll's title, written in one column, and its seal. */
-  const inscribe = (col: number) => {
-    // Low enough to clear a page's header bar.
-    const top = Math.max(4, rows * 0.08);
-    TITLE.split("").forEach((ch, k) => {
-      fix(col, top + k * 1.75, g(ch), 1.6, 0.9, INK);
-    });
-    // 清明 over 上河 in a frame.
-    const seal = top + TITLE.length * 1.75 + 0.6;
-    fix(col, seal + 0.55, G.frame, 2.6, 0.9, ZHU);
-    [
-      ["清", -0.42, -0.1],
-      ["明", -0.42, 0.95],
-      ["上", 0.42, -0.1],
-      ["河", 0.42, 0.95],
-    ].forEach(([ch, dx, dy]) => {
-      fix(col + Number(dx), seal + Number(dy), g(String(ch)), 0.62, 0.95, ZHU);
-    });
-  };
-
   /** A many-eaved pagoda standing over the rooftops; returns its width. */
   const pagoda = (x: number, groundRow: number) => {
     const tiers = Math.max(3, Math.min(7, Math.floor((groundRow - 3) / 2)));
@@ -344,13 +332,17 @@ export const createQingming = (
     pigments = new Uint8Array(n);
     fixtures = [];
     const rand = rng(W * 31 + rows);
-    // The first screen gets the colophon on the left, the city gate up to
-    // the right and the bridge below it.
-    canal = Math.round(Math.min(cols * 0.78, cols - 14));
+    // The first screen gets the pagoda on the left, the city gate up to
+    // the right and the bridge leaping the river between them.
+    const at = Math.round(cols * 0.32);
+    // Wide and low against the drop between the banks, so it reads as the
+    // painting's broad arch seen from above rather than a steep ramp.
+    const span = clamp(Math.round(cols * 0.46), 28, 56);
+    const north = riverTop(at) - 0.4;
+    const south = riverBottom(at + span) + 0.4;
+    bridge = { at, north, rise: (south - north) * 0.46, south, span };
     const gate = Math.round(cols * 0.58);
     const tower = Math.round(cols * 0.24);
-    const colophonAt = 3;
-    const colophonTo = colophonAt + 4;
 
     for (let x = 0; x < W; x++) {
       const u = (x / W) * P;
@@ -362,10 +354,9 @@ export const createQingming = (
         rows * (0.17 - 0.08 * smoothstep(0.35, 0.8, fbmTiled(u * 0.9, 8.3, P)));
       const top = riverTop(x);
       const bottom = riverBottom(x);
-      const inCanal = Math.abs(fromCanal(x)) <= CANAL_HALF;
       for (let y = 0; y < rows; y++) {
         const i = y * W + x;
-        if ((y >= top && y <= bottom) || (inCanal && y > bottom - 1)) {
+        if (y >= top && y <= bottom) {
           kinds[i] = WATER;
           continue;
         }
@@ -395,9 +386,7 @@ export const createQingming = (
         }
         // The banks: a crisp line at the water, then pale tilled ground.
         const edge =
-          Math.abs(y - top) < 1.2 ||
-          (y > bottom && y - bottom < 1.2) ||
-          (y > bottom && Math.abs(Math.abs(fromCanal(x)) - CANAL_HALF) < 1);
+          Math.abs(y - top) < 1.2 || (y > bottom && y - bottom < 1.2);
         const grain = fbmTiled(u * 6, y * 0.6, P * 6);
         base[i] = edge ? 0.5 : 0.04 + 0.12 * smoothstep(0.55, 0.8, grain);
         kinds[i] = LAND;
@@ -421,17 +410,13 @@ export const createQingming = (
     fix(gate + 8.5, cityFoot - 7, G.mast, 0.9, 0.7, INK);
     fix(gate + 9.3, cityFoot - 8, G.flag, 1.1, 0.9, ZHU, 2);
 
-    // Houses and willows along both banks, clear of the colophon and canal.
+    // Houses and willows along both banks, clear of the bridge's feet.
     const street = (side: "north" | "south") => {
-      let x = side === "north" ? colophonTo : rand() * 4;
+      let x = rand() * 4;
       while (x < W - 6) {
         const width = 4 + Math.floor(rand() * 5);
-        const d = fromCanal(x);
-        if (
-          side === "south" &&
-          d > -CANAL_HALF - 9 - width &&
-          d < CANAL_HALF + 9
-        ) {
+        const foot = fromBridge(x) - (side === "north" ? 0 : bridge.span);
+        if (foot > -width - 4 && foot < 4) {
           x += 2;
           continue;
         }
@@ -472,33 +457,39 @@ export const createQingming = (
     street("north");
     street("south");
 
-    // 虹桥: a smooth timber arch of loose glyphs over the canal, railing
-    // above, beam beneath, piers at the feet, the canal open below it.
-    const row = Math.min(rows - 3, Math.round(rows * 0.85));
-    bridge = { left: -CANAL_HALF - 6, right: CANAL_HALF + 6, rise: 6, row };
-    const steps = Math.ceil((bridge.right - bridge.left) / 0.38);
+    // 虹桥: a timber arch of loose glyphs from bank to bank — railing
+    // above, a deck, the beams of the arch beneath tied by struts, piers
+    // and short approaches at either foot, the river open below.
+    const length = Math.hypot(span, south - north);
+    const steps = Math.ceil(length / 0.36);
     for (let k = 0; k <= steps; k++) {
-      const d = bridge.left + ((bridge.right - bridge.left) * k) / steps;
-      const deck = deckRow(canal + d) ?? row;
-      fix(canal + d, deck, G.deck, 1.3, 0.95, INK);
-      fix(canal + d, deck + 0.85, G.beam, 1.2, 0.8, ZHE);
-      fix(canal + d, deck + 1.6, G.beam, 0.9, 0.45, ZHE);
-      if (k % 2 === 0) fix(canal + d, deck - 0.95, G.rail, 0.8, 0.65, INK);
+      const t = k / steps;
+      const col = at + span * t;
+      const deck = archRow(t);
+      fix(col, deck, G.deck, 1.4, 0.95, INK);
+      fix(col, deck + 0.85, G.beam, 1.2, 0.8, ZHE);
+      if (k % 2 === 0) fix(col, deck - 0.95, G.rail, 0.8, 0.65, INK);
+      // The lower arch of the timber frame, and struts up to the deck.
+      const under = archRow(t, 0.72) + 1.6;
+      if (under > deck + 1.6) {
+        fix(col, under, G.beam, 1, 0.6, ZHE);
+        if (k % 7 === 0) {
+          for (let r = deck + 1.6; r < under - 0.4; r += 0.7) {
+            fix(col, r, G.mast, 0.8, 0.5, ZHE);
+          }
+        }
+      }
     }
-    for (const foot of [bridge.left + 0.5, bridge.right - 0.5]) {
-      for (let r = 1; r < 6; r++) {
-        fix(
-          canal + foot,
-          (deckRow(canal + foot) ?? row) + r * 0.75,
-          G.mast,
-          1,
-          0.7,
-          ZHE,
-        );
+    for (const [col, row, dir] of [
+      [at, north, -1],
+      [at + span, south, 1],
+    ] as const) {
+      for (let r = 1; r < 3; r++) fix(col, row + r * 0.75, G.mast, 1, 0.7, ZHE);
+      for (let k = 1; k <= 4; k++) {
+        fix(col + dir * k * 0.45, row, G.deck, 1.1, 0.8 - k * 0.1, INK);
       }
     }
 
-    inscribe(colophonAt);
     fixtures.sort((a, b) => a.x - b.x);
   };
 
@@ -536,11 +527,7 @@ export const createQingming = (
           speed: path === "bridge" ? 4 + rand() * 4 : 6 + rand() * 8,
           x:
             path === "bridge"
-              ? (canal +
-                  bridge.left +
-                  1 +
-                  rand() * (bridge.right - bridge.left - 2)) *
-                cell
+              ? (bridge.at + bridge.span * (0.05 + rand() * 0.9) - 0.5) * cell
               : rand() * W * cell,
         };
       });
@@ -566,7 +553,7 @@ export const createQingming = (
 
   const walkerRow = (w: Walker) => {
     const col = w.x / cell + 0.5;
-    if (w.path === "bridge") return (deckRow(col) ?? bridge.row) - 1.3;
+    if (w.path === "bridge") return (deckRow(col) ?? bridge.north) - 1.3;
     if (w.path === "north") return riverTop(col) - 0.8;
     return riverBottom(col) + 1.8;
   };
@@ -660,9 +647,6 @@ export const createQingming = (
           : 0;
         emit(f.glyph, sx + wind, f.y, f.alpha, f.scale, f.pigment);
       };
-      const to = from + env.width + cell * 6;
-      visit(from, Math.min(to, span));
-      if (to > span) visit(0, to - span);
       for (const boat of boats) {
         const sx = onScreen(boat.x, env);
         if (sx === null) continue;
@@ -726,6 +710,11 @@ export const createQingming = (
           );
         }
       }
+      // The bridge and the other fixtures after the boats, which pass
+      // beneath it.
+      const to = from + env.width + cell * 6;
+      visit(from, Math.min(to, span));
+      if (to > span) visit(0, to - span);
       for (const w of walkers) {
         const sx = onScreen(w.x, env);
         if (sx === null) continue;
@@ -773,8 +762,8 @@ export const createQingming = (
         w.x += w.dir * speed * dt;
         if (w.path === "bridge") {
           // Walk the span, turning back at either foot.
-          const from = (canal + bridge.left + 1) * cell;
-          const to = (canal + bridge.right - 1) * cell;
+          const from = (bridge.at + bridge.span * 0.04 - 0.5) * cell;
+          const to = (bridge.at + bridge.span * 0.96 - 0.5) * cell;
           if (w.x < from || w.x > to) {
             w.dir = w.x < from ? 1 : -1;
             w.x = clamp(w.x, from, to);
