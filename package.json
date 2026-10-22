@@ -1,7 +1,28 @@
 {
   "name": "inkpond",
   "version": "0.1.0",
-  "description": "An ink-wash background of Chinese glyphs for canvas: hills, drifting mist, ripples under the pointer and ink that blooms where you click.",
+  "description": "An ink-wash background of Chinese glyphs for the web: hills in mist, a lotus pond with koi, and the Qingming handscroll. Ripples follow the pointer, clicks drop ink.",
+  "keywords": [
+    "canvas",
+    "background",
+    "ink-wash",
+    "chinese",
+    "glyphs",
+    "shanshui",
+    "qingming",
+    "koi",
+    "react",
+    "animation"
+  ],
+  "homepage": "https://github.com/shin4/inkpond#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shin4/inkpond.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shin4/inkpond/issues"
+  },
+  "author": "Shin",
   "license": "MIT",
   "type": "module",
   "sideEffects": [

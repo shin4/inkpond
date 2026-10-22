@@ -1,5 +1,7 @@
 # 墨池 Inkpond
 
+> An ink-wash background of Chinese glyphs for the web. Characters laid out by stroke density become distant hills in mist, a lotus pond with koi, or a slowly unrolling handscroll of *Along the River During the Qingming Festival*. The pointer stirs ripples, a click drops ink, and page content keeps a clear zone. Canvas 2D, zero runtime dependencies, React optional. Inspired by [stackedlol/ascii-sharks](https://github.com/stackedlol/ascii-sharks).
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-dark.png" />
   <img alt="墨池项目主页：清明上河长卷作底，右侧竖排大字「墨池」与朱印，一座木拱虹桥从近岸拱起越过河面，桥上行人往来" src="docs/images/hero-light.png" />
@@ -26,7 +28,7 @@
 | --- | --- |
 | <img alt="荷塘：荷叶与荷花之间，朱红和墨色的鲤鱼游动" src="docs/images/lotus.png" /> | <img alt="山水：暗色背景上两重远山与云雾" src="docs/images/shanshui.png" /> |
 
-项目主页的源码在 `demo/index.html`，本地 `bun run dev` 即可打开；`.github/workflows/pages.yml` 可以把它部署到 GitHub Pages（私有仓库需要付费方案，转为公开或升级后在 Actions 里手动运行即可）。
+项目主页的源码在 `demo/index.html`，本地 `bun run dev` 即可打开；在 Actions 里手动运行 `Pages` 工作流可以把它部署到 GitHub Pages。
 
 ## 快速开始
 

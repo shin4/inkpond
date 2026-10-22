@@ -1,7 +1,7 @@
 name: Pages
 
-# Run by hand from the Actions tab: Pages for a private repository needs a
-# paid plan, so this does not run on every push.
+# Run by hand from the Actions tab once Pages is enabled for the repository
+# (Settings → Pages → Source: GitHub Actions).
 on:
   workflow_dispatch:
 
