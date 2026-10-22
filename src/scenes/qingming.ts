@@ -152,9 +152,9 @@ export const createQingming = (
   let haze: CoarseField = coarseField(0, 0);
   /**
    * The 虹桥: its north foot at world column `at`, its south foot `span`
-   * columns on, each on its bank's row, the arch lifted `rise` rows.
+   * columns on, both on row `row`, the arch lifted `rise` rows between.
    */
-  let bridge = { at: 0, north: 0, rise: 0, south: 0, span: 1 };
+  let bridge = { at: 0, rise: 0, row: 0, span: 1 };
   let fixtures: Fixture[] = [];
   let boats: Boat[] = [];
   let walkers: Walker[] = [];
@@ -172,16 +172,39 @@ export const createQingming = (
    * The river is wide and mostly blank paper across the middle, where a
    * page's content usually sits; the life of the scroll is on its banks.
    */
-  const riverTop = (x: number) => rows * (0.33 + 0.03 * bank(x, 1.7));
-  const riverBottom = (x: number) => rows * (0.73 + 0.03 * bank(x, 5.3));
   /**
-   * The deck's row `t` of the way from the north foot to the south: the
-   * straight line between the banks, lifted into an arch.
+   * Near the bridge the river narrows and swings through an S-bend, low
+   * on the bridge's left and high on its right, so it crosses the bridge's
+   * row diagonally: both feet stand at one level, the north foot above the
+   * water and the south foot below it, as in the painting.
+   */
+  const riverCenter = (x: number) => {
+    const d = wrap(x - bridge.at - bridge.span / 2, W);
+    const dc = d > W / 2 ? d - W : d;
+    const reach = bridge.span * 1.2;
+    const bend =
+      -Math.tanh(dc / (bridge.span * 0.35)) *
+      Math.exp(-((dc / reach) ** 2)) *
+      rows *
+      0.17;
+    return rows * (0.53 + 0.02 * bank(x, 1.7)) + bend;
+  };
+  const riverHalf = (x: number) => {
+    const d = wrap(x - bridge.at - bridge.span / 2, W);
+    const dc = d > W / 2 ? d - W : d;
+    return (
+      rows *
+      (0.2 - 0.12 * Math.exp(-((dc / bridge.span) ** 2)) + 0.015 * bank(x, 5.3))
+    );
+  };
+  const riverTop = (x: number) => riverCenter(x) - riverHalf(x);
+  const riverBottom = (x: number) => riverCenter(x) + riverHalf(x);
+  /**
+   * The deck's row `t` of the way from the north foot to the south: level
+   * feet, lifted into a broad arch with a full, rounded crown.
    */
   const archRow = (t: number, lift = 1) =>
-    bridge.north +
-    (bridge.south - bridge.north) * t -
-    bridge.rise * lift * Math.sin(Math.PI * t);
+    bridge.row - bridge.rise * lift * Math.sin(Math.PI * t) ** 0.75;
   /** Bridge deck row at world column x (fractional), or null off the span. */
   const deckRow = (x: number) => {
     const t = fromBridge(x) / bridge.span;
@@ -334,13 +357,12 @@ export const createQingming = (
     const rand = rng(W * 31 + rows);
     // The first screen gets the pagoda on the left, the city gate up to
     // the right and the bridge leaping the river between them.
-    const at = Math.round(cols * 0.32);
-    // Wide and low against the drop between the banks, so it reads as the
-    // painting's broad arch seen from above rather than a steep ramp.
-    const span = clamp(Math.round(cols * 0.46), 28, 56);
-    const north = riverTop(at) - 0.4;
-    const south = riverBottom(at + span) + 0.4;
-    bridge = { at, north, rise: (south - north) * 0.46, south, span };
+    // A broad, shallow, even arch, its crest a sixth of its span high.
+    const span = clamp(Math.round(cols * 0.42), 26, 52);
+    const at = Math.round(cols * 0.55 - span / 2);
+    bridge = { at, rise: clamp(span * 0.17, 4, 8), row: 0, span };
+    const row = riverCenter(at + span / 2);
+    bridge.row = row;
     const gate = Math.round(cols * 0.58);
     const tower = Math.round(cols * 0.24);
 
@@ -416,7 +438,15 @@ export const createQingming = (
       while (x < W - 6) {
         const width = 4 + Math.floor(rand() * 5);
         const foot = fromBridge(x) - (side === "north" ? 0 : bridge.span);
-        if (foot > -width - 4 && foot < 4) {
+        // North of the river under the arch, a house would stand in the
+        // deck's way: leave the bank there to the bridge.
+        const d = fromBridge(x);
+        const underArch =
+          side === "north" &&
+          d > -width - 2 &&
+          d < bridge.span + 2 &&
+          Math.floor(riverTop(x)) - 6 < bridge.row - bridge.rise + 1;
+        if ((foot > -width - 4 && foot < 4) || underArch) {
           x += 2;
           continue;
         }
@@ -460,8 +490,7 @@ export const createQingming = (
     // 虹桥: a timber arch of loose glyphs from bank to bank — railing
     // above, a deck, the beams of the arch beneath tied by struts, piers
     // and short approaches at either foot, the river open below.
-    const length = Math.hypot(span, south - north);
-    const steps = Math.ceil(length / 0.36);
+    const steps = Math.ceil(span / 0.34);
     for (let k = 0; k <= steps; k++) {
       const t = k / steps;
       const col = at + span * t;
@@ -480,9 +509,9 @@ export const createQingming = (
         }
       }
     }
-    for (const [col, row, dir] of [
-      [at, north, -1],
-      [at + span, south, 1],
+    for (const [col, dir] of [
+      [at, -1],
+      [at + span, 1],
     ] as const) {
       for (let r = 1; r < 3; r++) fix(col, row + r * 0.75, G.mast, 1, 0.7, ZHE);
       for (let k = 1; k <= 4; k++) {
@@ -553,7 +582,7 @@ export const createQingming = (
 
   const walkerRow = (w: Walker) => {
     const col = w.x / cell + 0.5;
-    if (w.path === "bridge") return (deckRow(col) ?? bridge.north) - 1.3;
+    if (w.path === "bridge") return (deckRow(col) ?? bridge.row) - 1.3;
     if (w.path === "north") return riverTop(col) - 0.8;
     return riverBottom(col) + 1.8;
   };
