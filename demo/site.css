@@ -154,12 +154,28 @@ pre {
   backdrop-filter: blur(8px);
 }
 .motto {
-  margin: 0 0 10px;
-  font: 600 clamp(24px, 2.6vw, 34px) / 1.25 var(--serif);
+  margin: 10px 0 0;
+  writing-mode: vertical-rl;
+  font: 600 clamp(15px, 1.5vw, 20px) / 1 var(--serif);
+  letter-spacing: 0.3em;
+  color: var(--soft);
+}
+.lede {
+  margin: 0 0 12px;
+  font: 600 clamp(18px, 1.6vw, 21px) / 1.6 var(--serif);
 }
 .latin {
   margin: 0 0 18px;
+  font-size: 13px;
   color: var(--soft);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 .install {
   display: flex;
@@ -389,6 +405,55 @@ pre {
 .credits p {
   margin: 0 0 8px;
   max-width: 60em;
+}
+
+/* ---- FAQ ---- */
+.faq-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px var(--gutter);
+  font: 12px / 1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--line);
+}
+.faq-bar a {
+  text-decoration: none;
+}
+.faq {
+  max-width: 760px;
+  padding: 10vh var(--gutter) 8vh;
+}
+.faq h1 {
+  margin: 0 0 18px;
+  font: 700 clamp(36px, 5vw, 60px) / 1.1 var(--serif);
+}
+.faq-lead {
+  margin: 0 0 6vh;
+  color: var(--soft);
+}
+.faq dl {
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+.faq-item {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+.faq dt h2 {
+  margin: 0 0 10px;
+  font: 600 clamp(20px, 2vw, 24px) / 1.35 var(--serif);
+}
+.faq dd {
+  margin: 0;
+  line-height: 1.8;
+}
+.faq dd code {
+  font-size: 0.88em;
+  padding: 1px 5px;
+  border: 1px solid var(--line);
 }
 
 @media (max-width: 720px) {

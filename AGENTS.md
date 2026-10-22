@@ -44,6 +44,8 @@
 - `ripple()` / `drop()` 在暂停、减少动画和静帧档下不生效，生效时要唤醒休眠的帧循环。
 - 演示里的消息只在用户点击发送或按 Enter 时发出。
 - `demo/index.html` 是项目主页，`demo/session/` 是发起会话演示；主页上的每个画布只在进入视口时 `active`，离开就暂停。
+- 项目主页和 `demo/faq/` 在构建时预渲染（`scripts/prerender.mjs` 加载 `demo/prerender.tsx`），让不执行 JavaScript 的爬虫和 AI 也能读到正文；浏览器端用 `hydrateRoot` 接管，所以首屏渲染不能读 `localStorage`、`window` 等只在浏览器里才有的东西，要放进 effect。
+- 首页第一句、安装命令和网址集中在 `demo/site-meta.ts`；FAQ 问答在 `demo/Faq.tsx`，页面和 FAQPage 结构化数据都由它生成。`demo/public/llms.txt` 是给 AI 的简明说明，是手写的：改了场景、安装方式、许可或性能数字时同步更新它和 FAQ。
 - macOS 文件系统不区分大小写：不要在同一目录里放只差大小写的文件名（例如 `landing.tsx` 和 `Landing.tsx`），会互相覆盖。
 
 ## 字表与字体

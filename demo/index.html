@@ -3,11 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>墨池 Inkpond</title>
-    <meta
-      name="description"
-      content="以字为墨，以页为池：一层铺在页面背后的水墨汉字底。山水、荷塘、清明上河三种场景，Canvas 2D，零依赖。"
-    />
+    <title>墨池 Inkpond · 网页水墨汉字背景库</title>
+    <!--head-->
+    <script>
+      // Apply the saved theme before first paint (see Landing.tsx).
+      try {
+        const t = localStorage.getItem("inkpond-site.theme");
+        if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%23b4372b'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23fff' font-family='serif'%3E墨%3C/text%3E%3C/svg%3E"

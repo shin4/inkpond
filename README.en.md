@@ -187,7 +187,7 @@ After changing the glyphs any scene uses, rebuild all subsets from the original 
 scripts/build-font.sh path/to/SourceHanSerifSC-Medium.otf
 ```
 
-The project page source is `demo/index.html`; every push to `main` redeploys it through `.github/workflows/pages.yml`.
+The project page source is `demo/index.html` and the FAQ is `demo/faq/`; the build prerenders both to static HTML with structured data, next to an [llms.txt](https://shin4.github.io/inkpond/llms.txt) for AI assistants. Every push to `main` redeploys them through `.github/workflows/pages.yml`.
 
 ## Thanks
 

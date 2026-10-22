@@ -1,8 +1,8 @@
 import { type RefObject, useEffect, useRef, useState } from "react";
 import { InkPond } from "../src/react";
 import type { SceneName } from "../src/scenes";
+import { INSTALL, LEDE, LEDE_EN, REPO } from "./site-meta";
 
-const REPO = "https://github.com/shin4/inkpond";
 const INSPIRATION = "https://github.com/stackedlol/ascii-sharks";
 
 type Theme = "system" | "light" | "dark";
@@ -63,7 +63,7 @@ const pond = createInkPond(canvas, { scene: "lotus" });
 pond.ripple(x, y, 0.6); // 拨动水面
 pond.drop(x, y);        // 落墨`;
 
-const recallTheme = (): Theme => {
+export const recallTheme = (): Theme => {
   try {
     const saved = localStorage.getItem(THEME_KEY);
     return saved === "light" || saved === "dark" ? saved : "system";
@@ -129,6 +129,7 @@ const Hero = ({ theme, onTheme }: { theme: Theme; onTheme: () => void }) => {
           <a href="#scenes">三卷</a>
           <a href="#use">用法</a>
           <a href="./session/">发起会话 Demo</a>
+          <a href="./faq/">FAQ</a>
           <a href={REPO}>GitHub</a>
           <button className="theme" onClick={onTheme} type="button">
             {theme === "system"
@@ -140,21 +141,20 @@ const Hero = ({ theme, onTheme }: { theme: Theme; onTheme: () => void }) => {
         </span>
       </nav>
       <div className="hero-title" data-inkpond-avoid="">
-        <h1>墨池</h1>
+        <h1>
+          墨池<span className="sr-only">Inkpond：网页水墨汉字背景库</span>
+        </h1>
+        <p className="motto">以字为墨，以页为池。</p>
         <span aria-hidden="true" className="seal">
           墨<br />池
         </span>
       </div>
       <div className="hero-copy" data-inkpond-avoid="">
-        <p className="motto">以字为墨，以页为池。</p>
-        <p className="latin">
-          An ink-wash background of Chinese glyphs for the web — hills in mist,
-          koi in a lotus pond, and a handscroll of the river at Qingming that
-          never stops unrolling.
-        </p>
+        <p className="lede">{LEDE}</p>
+        <p className="latin">{LEDE_EN}</p>
         <div className="install">
-          <code>npm i github:shin4/inkpond</code>
-          <Copy text="npm i github:shin4/inkpond" />
+          <code>{INSTALL}</code>
+          <Copy text={INSTALL} />
         </div>
         <ul className="facts">
           <li>Canvas 2D</li>
@@ -241,8 +241,17 @@ const STATS = [
 ];
 
 export const Landing = () => {
-  const [theme, setTheme] = useState<Theme>(recallTheme);
+  // "system" on the first render, so it matches the prerendered HTML; the
+  // saved choice is applied by the inline script in index.html and here.
+  const [theme, setTheme] = useState<Theme>("system");
+  const recalled = useRef(false);
+  useEffect(() => setTheme(recallTheme()), []);
   useEffect(() => {
+    // The first pass would undo the inline script; the recalled theme follows.
+    if (!recalled.current) {
+      recalled.current = true;
+      return;
+    }
     const root = document.documentElement;
     if (theme === "system") root.removeAttribute("data-theme");
     else root.setAttribute("data-theme", theme);
@@ -321,7 +330,8 @@ export const Landing = () => {
         <p>
           字形取自思源宋体（SIL OFL 1.1），改名为 Inkpond Glyphs · 代码以 MIT
           许可发布 · <a href={REPO}>GitHub</a> ·{" "}
-          <a href="./session/">发起会话 Demo</a>
+          <a href="./session/">发起会话 Demo</a> · <a href="./faq/">常见问题</a>{" "}
+          · <a href="./llms.txt">llms.txt</a>
         </p>
       </footer>
     </>

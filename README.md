@@ -224,7 +224,7 @@ scripts/         构建、打包冒烟测试、字体子集生成
 
 </details>
 
-项目主页源码在 `demo/index.html`，每次推送到 `main` 由 `.github/workflows/pages.yml` 重新部署。
+项目主页源码在 `demo/index.html`，常见问题在 `demo/faq/`；构建时会预渲染成静态 HTML 并附带结构化数据，另有给 AI 读的 [llms.txt](https://shin4.github.io/inkpond/llms.txt)。每次推送到 `main` 由 `.github/workflows/pages.yml` 重新部署。
 
 ## 致谢
 

@@ -10,6 +10,7 @@ export default defineConfig({
     outDir: "../dist-demo",
     rollupOptions: {
       input: {
+        faq: resolve(__dirname, "demo/faq/index.html"),
         index: resolve(__dirname, "demo/index.html"),
         session: resolve(__dirname, "demo/session/index.html"),
       },
