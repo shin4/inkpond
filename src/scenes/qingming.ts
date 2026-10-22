@@ -1,8 +1,8 @@
 /**
- * 清明上河: a handscroll that unrolls slowly to the left. It opens on a
- * title and 杜牧's 清明 written in columns with a 朱 seal beneath; distant
- * mountains and a walled city with its gate tower stand behind a band of
- * haze; tiled roofs and 赭石 walls line both banks of a wide river, wine
+ * 清明上河: a handscroll that unrolls slowly to the left. It opens on its
+ * title in one column with a 朱 seal beneath; ranges of mountains rise over
+ * a long walled city with a three-tiered gate tower and a pagoda, their
+ * feet sinking into a band of haze; tiled roofs and 赭石 walls line both banks of a wide river, wine
  * flags and lanterns hang from the shops and willows trail their strands;
  * the 虹桥 arches over a canal on the near bank. Boats with crews work the
  * river, people throng the streets and the bridge, birds cross the sky, and
@@ -53,21 +53,14 @@ const RAMPS = [
   ["一", "土", "垣", "城", "郭", "墙", "堞", "阙"],
 ] as const;
 const TITLE = "清明上河图";
-/** 杜牧《清明》, one column per line, read right to left. */
-const POEM = [
-  "清明时节雨纷纷",
-  "路上行人欲断魂",
-  "借问酒家何处有",
-  "牧童遥指杏花村",
-];
 /** Boats, people, the bridge, flags, birds and the seals. */
-const LOOSE = `舟船篷帆桨丨～人仆客童驴马车轿梁拱栏一乙之酒灯囗墨池丿乀〇${TITLE}${POEM.join("")}`;
+const LOOSE = `舟船篷帆桨丨～人仆客童驴马车轿梁拱栏一乙之酒灯囗丿乀〇${TITLE}`;
 
 /** Buildings, trees and mountains are the scroll's dark ink. */
 const INK_WEIGHT = 1.8;
 /** CSS px the scroll travels each second. */
 const PAN_SPEED = 7;
-const CANAL_HALF = 4;
+const CANAL_HALF = 5;
 
 interface Boat {
   id: number;
@@ -301,41 +294,45 @@ export const createQingming = (
     }
   };
 
-  /** The colophon the scroll opens with: title, poem, seals. */
+  /** The scroll's title, written in one column, and its seal. */
   const inscribe = (col: number) => {
     // Low enough to clear a page's header bar.
     const top = Math.max(4, rows * 0.08);
     TITLE.split("").forEach((ch, k) => {
-      fix(col + 7, top + k * 1.75, g(ch), 1.6, 0.9, INK);
+      fix(col, top + k * 1.75, g(ch), 1.6, 0.9, INK);
     });
-    // The title's seal, 清明 over 上河 in a frame.
+    // 清明 over 上河 in a frame.
     const seal = top + TITLE.length * 1.75 + 0.6;
-    fix(col + 7, seal + 0.55, G.frame, 2.6, 0.9, ZHU);
+    fix(col, seal + 0.55, G.frame, 2.6, 0.9, ZHU);
     [
       ["清", -0.42, -0.1],
       ["明", -0.42, 0.95],
       ["上", 0.42, -0.1],
       ["河", 0.42, 0.95],
     ].forEach(([ch, dx, dy]) => {
-      fix(
-        col + 7 + Number(dx),
-        seal + Number(dy),
-        g(String(ch)),
-        0.62,
-        0.95,
-        ZHU,
-      );
+      fix(col + Number(dx), seal + Number(dy), g(String(ch)), 0.62, 0.95, ZHU);
     });
-    POEM.forEach((line, c) => {
-      line.split("").forEach((ch, k) => {
-        fix(col + 5.2 - c * 1.3, top + 0.6 + k * 1.15, g(ch), 0.95, 0.6, INK);
-      });
-    });
-    // A small 墨池 seal at the poem's foot.
-    const foot = top + 0.6 + 7 * 1.15 + 0.5;
-    fix(col + 1.3, foot + 0.5, G.frame, 2, 0.85, ZHU);
-    fix(col + 1.3, foot + 0.1, g("墨"), 0.62, 0.95, ZHU);
-    fix(col + 1.3, foot + 0.95, g("池"), 0.62, 0.95, ZHU);
+  };
+
+  /** A many-eaved pagoda standing over the rooftops; returns its width. */
+  const pagoda = (x: number, groundRow: number) => {
+    const tiers = Math.max(3, Math.min(7, Math.floor((groundRow - 3) / 2)));
+    for (let t = 0; t < tiers; t++) {
+      const w = Math.max(2, 7 - t);
+      const eaves = groundRow - 2 * t - 2;
+      const left = x - Math.floor(w / 2);
+      for (let c = left - 1; c <= left + w; c++) {
+        set(c, eaves, 0.95, ROOF, INK);
+      }
+      for (let c = left; c < left + w; c++) {
+        set(c, eaves + 1, c === x ? 0.6 : 0.42, WALL, c === x ? INK : ZHE);
+      }
+      fix(left - 1.45, eaves + 0.2, G.eaveL, 0.9, 0.85, INK);
+      fix(left + w + 0.45, eaves + 0.2, G.eaveR, 0.9, 0.85, INK);
+    }
+    const crown = groundRow - 2 * tiers - 1;
+    for (let k = 0; k < 3; k++) fix(x, crown - k * 0.75, G.mast, 0.9, 0.8, INK);
+    return 9;
   };
 
   const layoutWorld = () => {
@@ -349,16 +346,20 @@ export const createQingming = (
     const rand = rng(W * 31 + rows);
     // The first screen gets the colophon on the left, the city gate up to
     // the right and the bridge below it.
-    canal = Math.round(Math.min(cols * 0.78, cols - 12));
-    const gate = Math.round(cols * 0.56);
-    const colophonAt = 2;
-    const colophonTo = colophonAt + 12;
+    canal = Math.round(Math.min(cols * 0.78, cols - 14));
+    const gate = Math.round(cols * 0.58);
+    const tower = Math.round(cols * 0.24);
+    const colophonAt = 3;
+    const colophonTo = colophonAt + 4;
 
     for (let x = 0; x < W; x++) {
       const u = (x / W) * P;
-      // Two ranges of 远山: pale 花青 peaks behind, ink nearer.
-      const far = rows * (0.05 + 0.05 * (fbmTiled(u * 0.5, 3.1, P) - 0.5));
-      const near = rows * (0.12 + 0.06 * (fbmTiled(u * 0.8, 8.3, P) - 0.5));
+      // Two ranges of 远山: tall pale 花青 peaks behind, ink nearer; their
+      // feet sink into the band of haze above the city.
+      const far =
+        rows * (0.11 - 0.09 * smoothstep(0.3, 0.75, fbmTiled(u * 0.5, 3.1, P)));
+      const near =
+        rows * (0.17 - 0.08 * smoothstep(0.35, 0.8, fbmTiled(u * 0.9, 8.3, P)));
       const top = riverTop(x);
       const bottom = riverBottom(x);
       const inCanal = Math.abs(fromCanal(x)) <= CANAL_HALF;
@@ -368,14 +369,17 @@ export const createQingming = (
           kinds[i] = WATER;
           continue;
         }
-        if (y < rows * 0.26) {
+        if (y < rows * 0.3) {
           const cun = 0.35 + 0.65 * fbmTiled(u * 4, y * 0.35, P * 4);
+          // A dark crest line, the body washing paler toward its foot.
           const ridge = (r: number, w: number) =>
             y < r - 0.5
               ? 0
-              : smoothstep(r - 0.5, r + 1, y) * Math.exp(-(y - r) / w);
-          const vFar = ridge(far, rows * 0.06) * 0.28 * cun;
-          const vNear = ridge(near, rows * 0.05) * 0.42 * cun;
+              : smoothstep(r - 0.5, r + 1, y) *
+                Math.exp(-(y - r) / w) *
+                (y - r < 1.2 ? 1.35 : 1);
+          const vFar = ridge(far, rows * 0.1) * 0.36 * cun;
+          const vNear = ridge(near, rows * 0.08) * 0.52 * cun;
           const v = Math.max(vFar, vNear);
           if (v > 0.04) {
             base[i] = v * INK_WEIGHT;
@@ -383,7 +387,11 @@ export const createQingming = (
             pigments[i] = vFar > vNear ? HUAQING : INK;
             continue;
           }
-          if (y < far) continue;
+          // Open sky: dry paper, not water.
+          if (y < far) {
+            kinds[i] = LAND;
+            continue;
+          }
         }
         // The banks: a crisp line at the water, then pale tilled ground.
         const edge =
@@ -398,8 +406,8 @@ export const createQingming = (
     }
 
     // The city wall, with crenels, and a two-tiered gate tower.
-    const cityFrom = gate - Math.round(cols * 0.16);
-    const cityTo = gate + Math.round(cols * 0.18);
+    const cityFrom = gate - Math.round(cols * 0.2);
+    const cityTo = gate + Math.round(cols * 0.26);
     const cityFoot = Math.floor(rows * 0.3) - 6;
     for (let x = cityFrom; x < cityTo; x++) {
       for (let y = cityFoot - 3; y < cityFoot; y++) {
@@ -407,10 +415,11 @@ export const createQingming = (
         if (!crenel) set(x, y, y === cityFoot - 3 ? 0.75 : 0.55, CITY, INK);
       }
     }
-    const tier = house(gate - 5, 11, cityFoot - 1, 1.05, rand, 2);
-    if (tier > 4) house(gate - 3, 7, tier, 1, rand, 1);
-    fix(gate + 6.5, cityFoot - 7, G.mast, 0.9, 0.7, INK);
-    fix(gate + 7.3, cityFoot - 8, G.flag, 1.1, 0.9, ZHU, 2);
+    let tier = house(gate - 7, 15, cityFoot - 1, 1.05, rand, 2);
+    if (tier > 4) tier = house(gate - 5, 11, tier, 1, rand, 1);
+    if (tier > 4) house(gate - 3, 7, tier, 0.95, rand, 1);
+    fix(gate + 8.5, cityFoot - 7, G.mast, 0.9, 0.7, INK);
+    fix(gate + 9.3, cityFoot - 8, G.flag, 1.1, 0.9, ZHU, 2);
 
     // Houses and willows along both banks, clear of the colophon and canal.
     const street = (side: "north" | "south") => {
@@ -427,13 +436,18 @@ export const createQingming = (
           continue;
         }
         const span = Array.from({ length: width }, (_, k) => x + k);
+        if (side === "north" && x <= tower && x + width > tower - 4) {
+          const front = Math.floor(Math.min(...span.map(riverTop))) - 1;
+          x = tower + pagoda(tower, front - 1) - 3;
+          continue;
+        }
         if (side === "north") {
           const front = Math.floor(Math.min(...span.map(riverTop))) - 1;
           if (rand() < 0.28) willow(Math.round(x + 2), front, rand);
           else {
             // A fainter row further back, except where the city wall stands.
             const behindWall = x + width > cityFrom - 2 && x < cityTo + 2;
-            if (!behindWall && rand() < 0.7) {
+            if (!behindWall && rand() < 0.35) {
               house(Math.round(x + 2), width - 1, front - 6, 0.6, rand);
             }
             const ridge = house(Math.round(x), width, front - 1, 1, rand);
@@ -460,18 +474,19 @@ export const createQingming = (
 
     // 虹桥: a smooth timber arch of loose glyphs over the canal, railing
     // above, beam beneath, piers at the feet, the canal open below it.
-    const row = Math.min(rows - 3, Math.round(rows * 0.82));
-    bridge = { left: -CANAL_HALF - 5, right: CANAL_HALF + 5, rise: 4.5, row };
-    const steps = Math.ceil((bridge.right - bridge.left) / 0.45);
+    const row = Math.min(rows - 3, Math.round(rows * 0.85));
+    bridge = { left: -CANAL_HALF - 6, right: CANAL_HALF + 6, rise: 6, row };
+    const steps = Math.ceil((bridge.right - bridge.left) / 0.38);
     for (let k = 0; k <= steps; k++) {
       const d = bridge.left + ((bridge.right - bridge.left) * k) / steps;
       const deck = deckRow(canal + d) ?? row;
-      fix(canal + d, deck, G.deck, 1.1, 0.95, INK);
-      fix(canal + d, deck + 0.75, G.beam, 1, 0.8, ZHE);
-      if (k % 2 === 0) fix(canal + d, deck - 0.85, G.rail, 0.7, 0.6, INK);
+      fix(canal + d, deck, G.deck, 1.3, 0.95, INK);
+      fix(canal + d, deck + 0.85, G.beam, 1.2, 0.8, ZHE);
+      fix(canal + d, deck + 1.6, G.beam, 0.9, 0.45, ZHE);
+      if (k % 2 === 0) fix(canal + d, deck - 0.95, G.rail, 0.8, 0.65, INK);
     }
     for (const foot of [bridge.left + 0.5, bridge.right - 0.5]) {
-      for (let r = 1; r < 4; r++) {
+      for (let r = 1; r < 6; r++) {
         fix(
           canal + foot,
           (deckRow(canal + foot) ?? row) + r * 0.75,
@@ -490,9 +505,9 @@ export const createQingming = (
   const spawn = (width: number) => {
     const rand = rng(W * 7 + rows * 13);
     boats = Array.from(
-      { length: Math.max(5, Math.round(W / 34)) },
+      { length: Math.max(6, Math.round(W / 26)) },
       (_, id) => ({
-        big: rand() < 0.5,
+        big: rand() < 0.6,
         dir: rand() < 0.5 ? 1 : -1,
         id,
         // -1 near the north bank, 0 mid-river, 1 near the south bank.
@@ -532,7 +547,7 @@ export const createQingming = (
     walkers = [
       ...people("north", Math.round(W / 5)),
       ...people("south", Math.round(W / 6)),
-      ...people("bridge", 12),
+      ...people("bridge", 18),
     ];
     birds = Array.from({ length: 6 }, (_, k) => ({
       phase: rand() * 6,
@@ -570,7 +585,7 @@ export const createQingming = (
       const period = Math.max(4, Math.round(P * 0.8));
       for (let cy = 0; cy < haze.h; cy++) {
         const ry = (cy * COARSE) / Math.max(1, rows);
-        const band = 0.25 + 0.75 * Math.exp(-(((ry - 0.21) / 0.06) ** 2));
+        const band = 0.15 + 0.85 * Math.exp(-(((ry - 0.25) / 0.05) ** 2));
         for (let cx = 0; cx < haze.w; cx++) {
           const x = wrap(cx * COARSE + offset, W);
           haze.data[cy * haze.w + cx] =
@@ -600,7 +615,11 @@ export const createQingming = (
               ) * 0.34;
           } else {
             grid.wet[i] = 0.12;
-            grid.ground[i] = (base[j] ?? 0) * (1 - haze.at(x, y) * 0.75);
+            // Haze veils the mountains' feet and the plain, never a
+            // building: a half-hidden tower would leave its eaves floating.
+            const veiled = k === HILL || k === LAND;
+            grid.ground[i] =
+              (base[j] ?? 0) * (veiled ? 1 - haze.at(x, y) * 0.8 : 1);
           }
         }
       }
@@ -659,8 +678,8 @@ export const createQingming = (
               ? bottom - 1.3
               : (top + bottom) / 2 + 1;
         const y = rowToPx(lane) + Math.sin(env.time * 1.3 + boat.id) * 1.5;
-        const s = boat.big ? 1.2 : 1;
-        const n = boat.big ? 6 : 3;
+        const s = boat.big ? 1.45 : 1.1;
+        const n = boat.big ? 7 : 3;
         const gap = cell * 0.7 * s;
         const x0 = sx - ((n - 1) * gap) / 2;
         const stern = boat.dir > 0 ? x0 - gap : x0 + n * gap;
