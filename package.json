@@ -46,7 +46,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "rm -rf dist && tsc -p tsconfig.build.json && cp src/inkpond.css dist/ && mkdir -p dist/assets && cp src/assets/* dist/assets/",
+    "build": "node scripts/build.mjs",
+    "prepare": "node scripts/build.mjs",
     "build:demo": "vite build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
