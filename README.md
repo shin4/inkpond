@@ -51,6 +51,13 @@ npm i github:shin4/inkpond
 ```
 
 - npm 11 会对带构建脚本的依赖给出 `allow-scripts` 提示，安装照常完成；如果你的 npm 配置禁止依赖运行脚本，执行 `npm approve-scripts inkpond` 允许它即可。
+- 用 bun 安装：bun 默认不运行依赖的脚本，也不安装依赖自己的开发依赖。需要项目里有 TypeScript，并把 inkpond 加入信任列表：
+
+  ```bash
+  bun add -d typescript
+  bun add github:shin4/inkpond
+  bun pm trust inkpond
+  ```
 - 想固定版本，在地址后面加上提交或标签，例如 `github:shin4/inkpond#<commit>`。
 
 ## 在 React 里用
