@@ -1,6 +1,6 @@
 # inkpond — Agent Guide
 
-墨池：一个 Canvas 2D 的水墨汉字背景库，外加一个演示用的「发起会话」页面。用法和选项写在 [README.md](README.md)，这里只记录改代码时必须守住的规则。
+墨池：一个 Canvas 2D 的水墨汉字背景库，外加一个演示用的「发起会话」页面。用法和选项写在 [README.md](README.md)（中文，主入口）和 [README.en.md](README.en.md)（英文），两份内容要保持一致，改一份就同步另一份；这里只记录改代码时必须守住的规则。
 
 ## 范围
 
