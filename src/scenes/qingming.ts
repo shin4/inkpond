@@ -512,32 +512,37 @@ export const createQingming = (
     }
     bridge.length = lengths[samples] ?? 1;
     let k = 0;
-    for (let d = 0, n = 0; d <= bridge.length; d += 0.32, n++) {
+    // Wide-set glyphs, larger, in more courses: a heavy timber band
+    // rather than a dense line.
+    for (let d = 0, n = 0; d <= bridge.length; d += 0.82, n++) {
       while (k < samples && (lengths[k + 1] ?? 0) < d) k++;
       const t = k / samples;
       const p = bridgeAt(t);
       const o = bridgeNormal(t);
       const at = (off: number) =>
         [p.col + o.col * off, p.row + o.row * off] as const;
-      const [rc, rr] = at(1);
-      if (n % 2 === 0) fix(rc, rr, G.rail, 0.85, 0.7, INK);
-      fix(p.col, p.row, G.deck, 1.4, 0.95, INK);
-      const [b1c, b1r] = at(-0.85);
-      fix(b1c, b1r, G.beam, 1.25, 0.85, ZHE);
-      const [b2c, b2r] = at(-1.7);
-      fix(b2c, b2r, G.beam, 1.05, 0.6, ZHE);
-      if (n % 6 === 0) {
-        const [sc, sr] = at(-2.4);
-        fix(sc, sr, G.mast, 0.8, 0.45, ZHE);
+      const [rc, rr] = at(1.3);
+      fix(rc, rr, G.rail, 0.95, 0.7, INK);
+      fix(p.col, p.row, G.deck, 1.7, 0.95, INK);
+      const [b1c, b1r] = at(-1.25);
+      fix(b1c, b1r, G.beam, 1.55, 0.85, ZHE);
+      const [b2c, b2r] = at(-2.45);
+      fix(b2c, b2r, G.beam, 1.35, 0.65, ZHE);
+      const [b3c, b3r] = at(-3.5);
+      fix(b3c, b3r, G.beam, 1.1, 0.45, ZHE);
+      if (n % 3 === 0) {
+        const [sc, sr] = at(-4.4);
+        fix(sc, sr, G.mast, 0.95, 0.4, ZHE);
       }
     }
     for (const [col, row, dir] of [
       [sx, sy, -1],
       [nx, ny, 1],
     ] as const) {
-      for (let r = 1; r < 3; r++) fix(col, row + r * 0.75, G.mast, 1, 0.7, ZHE);
-      for (let j = 1; j <= 5; j++) {
-        fix(col + dir * j * 0.45, row, G.deck, 1.15, 0.85 - j * 0.1, INK);
+      for (let r = 1; r < 4; r++)
+        fix(col, row + r * 0.9, G.mast, 1.3, 0.75, ZHE);
+      for (let j = 1; j <= 3; j++) {
+        fix(col + dir * j * 0.7, row, G.deck, 1.5, 0.85 - j * 0.12, INK);
       }
     }
 
@@ -619,7 +624,7 @@ export const createQingming = (
     walkers = [
       ...people("north", Math.round(W / 5)),
       ...people("south", Math.round(W / 6)),
-      ...people("bridge", 30),
+      ...people("bridge", 20),
     ];
     birds = Array.from({ length: 6 }, (_, k) => ({
       phase: rand() * 6,
@@ -641,7 +646,7 @@ export const createQingming = (
     if (w.path === "bridge") {
       const p = bridgeAt(w.t);
       const o = bridgeNormal(w.t);
-      return { row: p.row + o.row * 1.2, x: colToPx(p.col + o.col * 1.2) };
+      return { row: p.row + o.row * 1.9, x: colToPx(p.col + o.col * 1.9) };
     }
     const col = w.x / cell + 0.5;
     return {
