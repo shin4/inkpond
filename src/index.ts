@@ -20,4 +20,10 @@ export {
 } from "./glyphs.js";
 export { SCENES, type SceneName } from "./scenes/index.js";
 export { JIEQI, type JieqiTerm, jieqiAt } from "./scenes/jieqi/calendar.js";
-export { DEFAULT_TIER_KEY, TIERS, type Tier } from "./tiers.js";
+export {
+  DEFAULT_TIER_KEY,
+  MAX_CELL,
+  MIN_CELL,
+  TIERS,
+  type Tier,
+} from "./tiers.js";

@@ -62,6 +62,7 @@ export const App = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [strength, setStrength] = useState(0.45);
   const [waveSpeed, setWaveSpeed] = useState(1);
+  const [cellSize, setCellSize] = useState(16);
   const [leaving, setLeaving] = useState(false);
   /** Hide the greeting and composer to see the whole picture. */
   const [showInput, setShowInput] = useState(true);
@@ -179,7 +180,8 @@ export const App = () => {
         {empty ? (
           <InkPond
             avoidFade={72}
-            key={`${scene}-${term}-${tint}-${strength}-${waveSpeed}`}
+            cellSize={cellSize}
+            key={`${scene}-${term}-${tint}-${strength}-${waveSpeed}-${cellSize}`}
             pondRef={pondRef}
             scene={scene}
             term={scene === "jieqi" && term !== "today" ? term : undefined}
@@ -211,6 +213,17 @@ export const App = () => {
               step={0.05}
               type="range"
               value={strength}
+            />
+          </label>
+          <label>
+            字号 <output>{cellSize}px</output>
+            <input
+              max={40}
+              min={12}
+              onChange={(event) => setCellSize(Number(event.target.value))}
+              step={2}
+              type="range"
+              value={cellSize}
             />
           </label>
           <label>

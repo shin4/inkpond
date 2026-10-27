@@ -12,6 +12,7 @@ Key facts:
 - Programmatic input: `pond.ripple(clientX, clientY, strength)` and `pond.drop(clientX, clientY)`.
 - Performance: glyphs are rasterised once into an atlas; under 1 ms of script per calm frame, about 2 ms p95 when fully stirred (1920×1080, DPR 1.5). Frame rate drops when calm, stops after 30 s idle, pauses in hidden tabs, and steps down on weak devices or software rendering.
 - Accessibility: the canvas is `aria-hidden`; reduced motion draws a still picture; forced-colours mode hides it.
+- Glyph size: `cellSize` (CSS px, 12–48, default 16); a device that steps down keeps its tier's larger cell.
 - Colours: ink and four pale pigments (vermilion, rouge, ochre, indigo) are CSS variables with dark-mode values; `tint: false` for ink only.
 - Licence: code MIT; the bundled glyph subsets of Source Han Serif SC are SIL OFL 1.1, renamed Inkpond Glyphs.
 - Inspired by stackedlol/ascii-sharks; written from scratch.

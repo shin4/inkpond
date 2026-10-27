@@ -123,7 +123,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "Is it accessible?",
     },
     {
-      a: "Yes. The ink and the four pale pigments (vermilion, rouge, ochre, indigo) are CSS variables with dark-mode values; ink depth, wave speed and the width of clear zones are options; `levels` replaces the glyphs of the main ground (other glyphs need a font that covers them).",
+      a: "Yes. The ink and the four pale pigments (vermilion, rouge, ochre, indigo) are CSS variables with dark-mode values; ink depth, glyph size (`cellSize`), wave speed and the width of clear zones are options; `levels` replaces the glyphs of the main ground (other glyphs need a font that covers them).",
       q: "Can I change the colours, the depth or the glyphs?",
     },
     {
@@ -200,7 +200,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "对无障碍友好吗？",
     },
     {
-      a: "可以换。墨色和四种淡彩（朱、胭脂、赭石、花青）都是 CSS 变量，支持暗色主题；浓淡、水波速度、留白宽度都有选项；`levels` 可以替换主地面用的字（换字需要自备覆盖这些字的字体）。",
+      a: "可以换。墨色和四种淡彩（朱、胭脂、赭石、花青）都是 CSS 变量，支持暗色主题；浓淡、字号（`cellSize`）、水波速度、留白宽度都有选项；`levels` 可以替换主地面用的字（换字需要自备覆盖这些字的字体）。",
       q: "能改颜色、浓淡或换成自己的字吗？",
     },
     {

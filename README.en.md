@@ -173,6 +173,7 @@ Both do nothing while paused, in reduced motion and on the still tier.
 | `active` | `true` | Whether the view is on screen; background tabs always pause |
 | `strength` | `0.45` | Ink depth of the scene; ripples and ink drops are not affected |
 | `waveSpeed` | `1` | Wave speed multiplier |
+| `cellSize` | the tier's (16) | Glyph cell in CSS px, 12–48: the glyph size; smaller draws more glyphs and costs more; after a step down it never goes below that tier's cell (22 on lite) |
 | `levels` | per scene | Glyph levels for the main ground (the hills, or the water in lotus and Qingming), light to dark; other glyphs need your own font; not used by the solar terms |
 | `reducedMotion` | follows the system | When on, draws one still picture and ignores the pointer |
 | `avoidAttribute` | `data-inkpond-avoid` | Attribute that marks clear zones |
@@ -189,7 +190,7 @@ Both do nothing while paused, in reduced motion and on the still tier.
 Each glyph is rasterised once into an atlas, and every frame only copies from it. The still parts of a scene are computed once per size, and slow layers such as mist are recomputed every 4 frames.
 
 - **Frame rate on demand**: tier rate while the water moves; about 20–24 fps when only koi, boats or the scroll move; 10 fps when only mist drifts; stops after 30 s without input and wakes on the next pointer move.
-- **Three tiers**: standard (60 fps, 16px cells), lite (30 fps, 22px cells) and still. Software rendering starts on still and weak devices on lite; sustained jank steps down at runtime, remembered for 30 days.
+- **Three tiers**: standard (60 fps, 16px cells), lite (30 fps, 22px cells) and still. `cellSize` changes the cell: larger is cheaper, while smaller draws more glyphs by area (12px about 1.8× as many as 16px), and a stepped-down tier still keeps its own cell as the floor. Software rendering starts on still and weak devices on lite; sustained jank steps down at runtime, remembered for 30 days.
 - **Accessibility**: pauses in hidden tabs; reduced motion draws one still picture; the canvas is hidden in forced-colours mode.
 
 <details>

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { InkPondEngine, STEP_S } from "../src/engine";
 import {
+  cellFor,
   createTierJudge,
   DEFAULT_TIER_KEY,
   initialTier,
@@ -89,6 +90,20 @@ describe("InkPondEngine", () => {
 
 describe("ink pond tiers", () => {
   const device = { software: false, weak: false };
+
+  it("lay out at the tier's cell unless the page asks for another", () => {
+    expect(cellFor(0)).toBe(16);
+    expect(cellFor(1)).toBe(22);
+    expect(cellFor(0, 28)).toBe(28);
+    expect(cellFor(0, 13)).toBe(13);
+    // Kept within 12–48, and never finer than a stepped-down tier's cell.
+    expect(cellFor(0, 4)).toBe(12);
+    expect(cellFor(0, 200)).toBe(48);
+    expect(cellFor(1, 13)).toBe(22);
+    expect(cellFor(1, 30)).toBe(30);
+    expect(cellFor(2, 12)).toBe(22);
+    expect(cellFor(0, Number.NaN)).toBe(16);
+  });
 
   it("steps down when the slowest 5% of a 60-frame window run long", () => {
     const judge = createTierJudge(8);

@@ -24,6 +24,23 @@ export const TIERS: readonly Tier[] = [
 ];
 
 export const STILL_TIER = TIERS.length - 1;
+
+/** The cell sizes a page may ask for (cellSize), in CSS px. */
+export const MIN_CELL = 12;
+export const MAX_CELL = 48;
+
+/**
+ * The cell to lay out at. Without a request, the tier's own. A request is
+ * kept within MIN_CELL–MAX_CELL and, once a device has stepped down, never
+ * finer than that tier's cell: cost grows with the square of 1 / cell, and
+ * the larger cells are what the lower tiers save by.
+ */
+export const cellFor = (tier: number, requested?: number) => {
+  const own = TIERS[tier]?.cell ?? TIERS[0]?.cell ?? 16;
+  if (requested === undefined || !Number.isFinite(requested)) return own;
+  const asked = Math.min(MAX_CELL, Math.max(MIN_CELL, requested));
+  return tier === 0 ? asked : Math.max(asked, own);
+};
 /** p95 work per painted frame before stepping down. */
 export const BUDGET_MS = 8;
 const WINDOW = 60;

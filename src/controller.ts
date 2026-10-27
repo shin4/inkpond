@@ -1,8 +1,8 @@
 /**
  * Drives an InkPondEngine on a canvas that fills its parent (the host): the
  * frame loop, pointer input, the clear zones around the host's
- * `[data-inkpond-avoid]` elements, the glyph font, the theme and the
- * performance tiers.
+ * `[data-inkpond-avoid]` elements, the glyph font, the theme, the cell size
+ * and the performance tiers.
  *
  * Painting follows what is on screen: every frame at the tier's rate while
  * the water moves, 24 fps while only the scene's own koi, boats or scroll
@@ -22,6 +22,7 @@ import {
 } from "./engine.js";
 import { DEFAULT_FALLBACK_FONTS } from "./glyphs.js";
 import {
+  cellFor,
   createTierJudge,
   DEFAULT_TIER_KEY,
   initialTier,
@@ -58,6 +59,12 @@ export interface InkPondOptions extends InkPondEngineOptions {
   fallbackFonts?: string;
   /** localStorage key that remembers a step down, or null to forget it. */
   tierStorageKey?: string | null;
+  /**
+   * Glyph cell in CSS px, 12–48 (default: the tier's, 16). Smaller cells
+   * draw more glyphs; a device that steps down never goes below its tier's
+   * cell (22 on lite).
+   */
+  cellSize?: number;
 }
 
 export interface InkPond {
@@ -241,7 +248,12 @@ export const createInkPond = (
     const t = TIERS[tier] ?? TIERS[0];
     if (!t) return;
     const dpr = Math.min(window.devicePixelRatio || 1, t.dprCap);
-    engine.resize(rect.width, rect.height, dpr, t.cell);
+    engine.resize(
+      rect.width,
+      rect.height,
+      dpr,
+      cellFor(tier, options.cellSize),
+    );
     syncAvoid(true);
   };
 

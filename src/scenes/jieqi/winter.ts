@@ -264,6 +264,8 @@ export const dongzhi: TermSpec = {
       },
       stamps(t, emit) {
         const R = Math.min(v.width, v.height) * 0.4;
+        // The 81 must not touch, however large the cell: a glyph is 1.25 cells.
+        const fit = Math.min(1, (TAU * R) / 81 / (v.cell * 1.25 * 0.8));
         for (let i = 0; i < 81; i++) {
           const a = -Math.PI / 2 + (i / 81) * TAU;
           const on = i < days;
@@ -272,7 +274,7 @@ export const dongzhi: TermSpec = {
             v.width / 2 + Math.cos(a) * R,
             v.height / 2 + Math.sin(a) * R,
             on ? 0.95 : 0.45,
-            on ? 0.7 : 0.5,
+            (on ? 0.8 : 0.5) * fit,
             on ? ZHU : INK,
           );
         }

@@ -130,8 +130,9 @@ export const yushui: TermSpec = {
       },
       stamps(_t, emit) {
         const n = Math.hypot(wind, 1);
-        const ux = (wind / n) * 16;
-        const uy = 16 / n;
+        const gap = Math.max(16, v.cell);
+        const ux = (wind / n) * gap;
+        const uy = gap / n;
         for (const d of drops) {
           if (d.life <= 0) continue;
           emit(rain, d.x, d.y, 0.85, 0.75, INK);

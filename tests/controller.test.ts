@@ -163,4 +163,19 @@ describe("createInkPondController", () => {
     );
     controller.destroy();
   });
+
+  it("lays the grid out at the page's cellSize", () => {
+    const resize = vi.spyOn(InkPondEngine.prototype, "resize");
+    const { canvas } = mountHost();
+    boxes.set(canvas, { height: 600, left: 0, top: 0, width: 800 });
+    // 30 px is coarser than every tier's cell, so it holds on any machine.
+    const controller = createInkPond(canvas, {
+      cellSize: 30,
+      fontUrl: null,
+      reducedMotion: true,
+      tierStorageKey: null,
+    });
+    expect(resize).toHaveBeenLastCalledWith(800, 600, expect.any(Number), 30);
+    controller.destroy();
+  });
 });
