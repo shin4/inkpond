@@ -19,10 +19,10 @@ An ink-wash background of Chinese glyphs for the web.
   <img alt="The Qingming handscroll unrolling to the left: a timber rainbow bridge arches from the near bank over the river, boats pass, the pointer stirs ripples and a click spreads ink" src="docs/images/qingming-light.webp" />
 </picture>
 
-Chinese characters, laid out by stroke density, become a picture: distant hills in mist, a lotus pond with koi, a slowly unrolling handscroll of *Along the River During the Qingming Festival*, or the twenty-four solar terms, changing with the date. The pointer stirs ripples, a click drops ink that spreads and fades, and page content keeps a clear zone around it.
+Chinese characters, laid out by stroke density, become a picture: distant hills in mist, a lotus pond with koi, a slowly unrolling handscroll of *Along the River During the Qingming Festival*, the twenty-four solar terms, changing with the date, or a deep sea with a whale passing beneath it. The pointer stirs ripples, a click drops ink that spreads and fades, and page content keeps a clear zone around it.
 
-- **Four scenes**: hills, lotus pond, the Qingming scroll, and the 24 solar terms that follow the date, with optional pale colour
-- **Responsive**: ripples follow the pointer, clicks drop ink, koi flee and come to feed, walkers scatter from the ink
+- **Five scenes**: hills, lotus pond, the Qingming scroll, the 24 solar terms that follow the date, and a whale in the deep sea, with optional pale colour
+- **Responsive**: ripples follow the pointer, clicks drop ink, koi flee and come to feed, walkers scatter from the ink, the whale dives when touched
 - **Out of the way**: content gets a clear zone, and koi, boats and walkers steer around it
 - **Light**: Canvas 2D, zero runtime dependencies, under 2 ms of script per frame, steps down on weak devices
 - **React optional**: an `<InkPond />` component, or use it without React
@@ -35,8 +35,9 @@ Chinese characters, laid out by stroke density, become a picture: distant hills 
 | `lotus` | A lotus pond seen from above: leaves, flowers, duckweed | Koi swim around content, scatter from the pointer and come to where ink drops |
 | `qingming` | The Qingming handscroll: mountains and city walls, a pagoda and gate towers, taverns along both banks, a timber rainbow bridge across the river | The scroll unrolls to the left, boatmen pole, walkers cross the bridge, ink scatters them |
 | `jieqi` | The 24 solar terms (节气), one picture each; by default the term today falls in | See the table below; if the page stays open into the next term, it bleeds over to it in ink |
+| `beiming` | 北冥, the northern deep: the open sea from above, a whale's shadow under the swell | The whale glides by, rising and sinking about once a minute and leaving flat calm footprints when shallow; touched by the pointer it dives, and ink draws it near |
 
-The lotus, Qingming and solar-term scenes use a touch of pale colour (vermilion, rouge, ochre, indigo); set `tint={false}` for ink only.
+The lotus, Qingming, solar-term and whale scenes use a touch of pale colour (vermilion, rouge, ochre, indigo); set `tint={false}` for ink only.
 
 ### The 24 solar terms
 
@@ -166,7 +167,7 @@ Both do nothing while paused, in reduced motion and on the still tier.
 
 | Option | Default | Meaning |
 | --- | --- | --- |
-| `scene` | `"shanshui"` | `shanshui` / `lotus` / `qingming` / `jieqi` |
+| `scene` | `"shanshui"` | `shanshui` / `lotus` / `qingming` / `jieqi` / `beiming` |
 | `term` | today's term | `jieqi` only: show this solar term, e.g. `"qingming"` |
 | `date` | now | `jieqi` only: show this day's term, and stay on it |
 | `tint` | `true` | Draw pale colour; `false` for ink only |
@@ -174,7 +175,7 @@ Both do nothing while paused, in reduced motion and on the still tier.
 | `strength` | `0.45` | Ink depth of the scene; ripples and ink drops are not affected |
 | `waveSpeed` | `1` | Wave speed multiplier |
 | `cellSize` | the tier's (16) | Glyph cell in CSS px, 12–48: the glyph size; smaller draws more glyphs and costs more; after a step down it never goes below that tier's cell (22 on lite) |
-| `levels` | per scene | Glyph levels for the main ground (the hills, or the water in lotus and Qingming), light to dark; other glyphs need your own font; not used by the solar terms |
+| `levels` | per scene | Glyph levels for the main ground (the hills, the water in lotus and Qingming, or the sea in beiming), light to dark; other glyphs need your own font; not used by the solar terms |
 | `reducedMotion` | follows the system | When on, draws one still picture and ignores the pointer |
 | `avoidAttribute` | `data-inkpond-avoid` | Attribute that marks clear zones |
 | `avoidPadding` | `20` | Fully clear margin around those elements (CSS px) |
@@ -203,6 +204,7 @@ Headless Chrome, 1920×1080, DPR 1.5, script time per frame as median / p95, bud
 | Shanshui | 0.2 / 0.3 ms | 0.9 / 1.8 ms | 0.1 ms |
 | Lotus | 0.2 / 0.3 ms | 1.1 / 1.9 ms | < 0.1 ms |
 | Qingming | 0.7 / 0.9 ms | 1.3 / 1.7 ms | 0.2 ms |
+| Beiming | 0.4 / 0.8 ms | as lotus, p95 about 0.4 ms higher | 0.4 ms |
 
 Nearly all of it is image copies. All 24 solar-term pictures are drawn to the same budget: at most about 2,600 glyphs per calm frame at that size, about as many as Qingming. With the GPU off and CPU rasterisation, a fully stirred frame takes about 9 ms, which is what the starting tier and the step-down are for. Step-down rules: a median over the last 10 frames above 16 ms, or a frame gap over 60 ms, goes straight to still; every 60 frames, a p95 above 8 ms or a gap over 40 ms steps down one tier. The atlas is a 16-column grid (Qingming at DPR 2 is 640×1400px), well inside the 4096px texture limit of many mobile GPUs.
 
@@ -218,6 +220,7 @@ Each scene ships a subset of Source Han Serif SC Medium (SIL OFL 1.1) with only 
 | `inkpond-lotus.woff2` | 66 | about 16 KiB |
 | `inkpond-qingming.woff2` | 101 | about 21 KiB |
 | `inkpond-jieqi.woff2` | 129 | about 29 KiB (one for all 24 terms) |
+| `inkpond-beiming.woff2` | 21 | about 6 KiB |
 
 The OFL forbids modified versions from using the Reserved Font Name "Source", so the subsets are renamed **Inkpond Glyphs**. The licence and a note of the changes are in `src/assets/OFL.txt`.
 

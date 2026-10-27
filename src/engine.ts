@@ -73,7 +73,7 @@ interface Drop {
 }
 
 export interface InkPondEngineOptions {
-  /** The picture: "shanshui" (default), "lotus", "qingming" or "jieqi". */
+  /** The picture: "shanshui" (default), "lotus", "qingming", "jieqi" or "beiming". */
   scene?: SceneName;
   /**
    * Stroke-density ramp of the scene's main ground, lightest level first.

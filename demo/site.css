@@ -276,7 +276,8 @@ main section {
   border: 1px solid var(--line);
   backdrop-filter: blur(8px);
 }
-.scene-lotus .caption {
+.scene-lotus .caption,
+.scene-beiming .caption {
   left: auto;
   right: var(--gutter);
 }
@@ -483,7 +484,8 @@ pre {
   .scene .caption,
   .scene-lotus .caption,
   .scene-qingming .caption,
-  .scene-jieqi .caption {
+  .scene-jieqi .caption,
+  .scene-beiming .caption {
     top: auto;
     right: auto;
     left: var(--gutter);

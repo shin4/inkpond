@@ -72,7 +72,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "Who is it for, and where does it fit?",
     },
     {
-      a: "An empty landing or chat screen feels bare, while video backgrounds and large images are heavy and compete with the content. Inkpond gives the page a moving, pointer-aware background for very little (a glyph subset of 10–29 KiB per scene, no runtime dependencies) and keeps clear of the content, so text stays readable and the page stays fast.",
+      a: "An empty landing or chat screen feels bare, while video backgrounds and large images are heavy and compete with the content. Inkpond gives the page a moving, pointer-aware background for very little (a glyph subset of 6–29 KiB per scene, no runtime dependencies) and keeps clear of the content, so text stays readable and the page stays fast.",
       q: "What problem does it solve?",
     },
     {
@@ -99,7 +99,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "How do I use it in Svelte?",
     },
     {
-      a: "Four: `shanshui` (the default) is two ranges of hills in mist; `lotus` is a lotus pond whose koi flee the pointer and swim to dropped ink; `qingming` is a handscroll that keeps unrolling, with city walls, a pagoda, the rainbow bridge, boats and walkers; `jieqi` is the twenty-four solar terms, a moving picture for each that changes with the date (or pin one with `term`). Lotus, Qingming and the solar terms carry a touch of pale colour, or ink only with `tint: false`.",
+      a: "Five: `shanshui` (the default) is two ranges of hills in mist; `lotus` is a lotus pond whose koi flee the pointer and swim to dropped ink; `qingming` is a handscroll that keeps unrolling, with city walls, a pagoda, the rainbow bridge, boats and walkers; `jieqi` is the twenty-four solar terms, a moving picture for each that changes with the date (or pin one with `term`); `beiming` is the deep sea seen from above, with a whale's shadow that rises and sinks, dives when the pointer touches it and comes toward dropped ink. Lotus, Qingming, the solar terms and beiming carry a touch of pale colour, or ink only with `tint: false`.",
       q: "What scenes are there?",
     },
     {
@@ -131,7 +131,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "Can I use it commercially? What is the licence?",
     },
     {
-      a: "From Source Han Serif SC Medium. Each scene ships only the glyphs it uses, 10–29 KiB each (the 24 solar terms share one), loaded only when that scene is. As the OFL requires, the subsets are renamed Inkpond Glyphs.",
+      a: "From Source Han Serif SC Medium. Each scene ships only the glyphs it uses, 6–29 KiB each (the 24 solar terms share one), loaded only when that scene is. As the OFL requires, the subsets are renamed Inkpond Glyphs.",
       q: "Where does the font come from, and how much does it load?",
     },
     {
@@ -176,7 +176,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "在 Svelte 里怎么用？",
     },
     {
-      a: "有四个场景：`shanshui`（山水，默认）是两重远山与云雾；`lotus`（荷塘）是荷叶荷花，鲤鱼会躲开鼠标、游向落墨处；`qingming`（清明上河）是一卷不断展开的长卷，有城郭、宝塔、虹桥、船只和行人；`jieqi`（二十四节气）一节一画，按日期自动切换，也可以用 `term` 固定某一个。荷塘、清明和节气带淡彩，也可以只用墨色。",
+      a: "有五个场景：`shanshui`（山水，默认）是两重远山与云雾；`lotus`（荷塘）是荷叶荷花，鲤鱼会躲开鼠标、游向落墨处；`qingming`（清明上河）是一卷不断展开的长卷，有城郭、宝塔、虹桥、船只和行人；`jieqi`（二十四节气）一节一画，按日期自动切换，也可以用 `term` 固定某一个；`beiming`（北冥）俯看深海，浪下一头鲸的影子时浮时沉，鼠标触到会下潜，落墨引它游近。荷塘、清明、节气和北冥带淡彩，也可以只用墨色。",
       q: "有哪些场景？",
     },
     {
@@ -208,7 +208,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "可以商用吗？是什么许可？",
     },
     {
-      a: "字形来自思源宋体 SC Medium（Source Han Serif），每个场景只带自己用到的字，约 10–29 KiB 一个（二十四节气共用一个），用到哪个场景才加载哪个。按 OFL 规定改名为 Inkpond Glyphs。",
+      a: "字形来自思源宋体 SC Medium（Source Han Serif），每个场景只带自己用到的字，约 6–29 KiB 一个（二十四节气共用一个），用到哪个场景才加载哪个。按 OFL 规定改名为 Inkpond Glyphs。",
       q: "字体从哪里来？要额外加载多少？",
     },
     {
@@ -243,7 +243,7 @@ const PAGE = {
       "。",
     ],
     licence: "代码以 MIT 许可发布 · 字体按 SIL OFL 1.1 授权",
-    nav: { scenes: "四卷", use: "用法" },
+    nav: { scenes: "五卷", use: "用法" },
   },
 } as const;
 
