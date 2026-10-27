@@ -1,11 +1,21 @@
 import type { InkPondScene } from "../scene.js";
+import { createBeiming } from "./beiming.js";
 import { createJieqi, type JieqiOptions } from "./jieqi/index.js";
 import { createLotus } from "./lotus.js";
 import { createQingming } from "./qingming.js";
 import { createShanshui } from "./shanshui.js";
 
-/** 山水 (default), 荷塘 with koi, the 清明上河 scroll, and the 二十四节气. */
-export const SCENES = ["shanshui", "lotus", "qingming", "jieqi"] as const;
+/**
+ * 山水 (default), 荷塘 with koi, the 清明上河 scroll, the 二十四节气, and
+ * 北冥 with a whale under the sea.
+ */
+export const SCENES = [
+  "shanshui",
+  "lotus",
+  "qingming",
+  "jieqi",
+  "beiming",
+] as const;
 export type SceneName = (typeof SCENES)[number];
 
 /**
@@ -18,6 +28,8 @@ export const createScene = (
   jieqi?: JieqiOptions,
 ): InkPondScene => {
   switch (name) {
+    case "beiming":
+      return createBeiming(levels);
     case "jieqi":
       return createJieqi(jieqi);
     case "lotus":

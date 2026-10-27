@@ -13,6 +13,7 @@ const SCENE_LABELS: Record<SceneName, string> = {
   qingming: "清明上河",
   shanshui: "山水",
   jieqi: "二十四节气",
+  beiming: "北冥",
 };
 /** 节气: today's term, or one picked to look at. */
 type TermChoice = "today" | JieqiTerm;
@@ -55,7 +56,11 @@ export const App = () => {
     recall("inkpond-demo.theme", ["light", "dark"], "system"),
   );
   const [scene, setScene] = useState<SceneName>(() =>
-    recall("inkpond-demo.scene", ["lotus", "qingming", "jieqi"], "shanshui"),
+    recall(
+      "inkpond-demo.scene",
+      ["lotus", "qingming", "jieqi", "beiming"],
+      "shanshui",
+    ),
   );
   const [term, setTerm] = useState<TermChoice>("today");
   const [tint, setTint] = useState(true);

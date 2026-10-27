@@ -88,7 +88,7 @@ try {
         "--input-type=module",
         "-e",
         `const m = await import("inkpond");
-         if (m.SCENES.join() !== "shanshui,lotus,qingming,jieqi") throw new Error("SCENES");
+         if (m.SCENES.join() !== "shanshui,lotus,qingming,jieqi,beiming") throw new Error("SCENES");
          if (m.jieqiAt(new Date("2026-10-27T12:00:00+08:00")) !== "shuangjiang") throw new Error("jieqiAt");
          const r = await import("inkpond/react");
          if (typeof r.InkPond !== "function") throw new Error("InkPond");`,
@@ -158,9 +158,9 @@ createInkPond(canvas, { scene: "lotus", tint: false }).destroy();
     const fonts = readdirSync(join(app, "dist/assets")).filter((f) =>
       f.endsWith(".woff2"),
     );
-    if (fonts.length !== 4) {
+    if (fonts.length !== 5) {
       throw new Error(
-        `expected 4 font subsets in the build, got ${fonts.length}`,
+        `expected 5 font subsets in the build, got ${fonts.length}`,
       );
     }
     console.log(`  ok: ${label}`);

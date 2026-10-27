@@ -109,6 +109,103 @@ describe("scenes", () => {
     ).toBeGreaterThan(80);
   });
 
+  /** The 北冥 whale as composed: its cells, ink and where it is. */
+  const whaleOf = (scene: InkPondScene, time: number, size = view) => {
+    const n = size.cols * size.rows;
+    const grid = {
+      ground: new Float32Array(n),
+      kind: new Uint8Array(n),
+      pigment: new Uint8Array(n),
+      wet: new Float32Array(n),
+    };
+    scene.compose(grid, 0, time);
+    let ink = 0;
+    let darkest = 0;
+    let x = 0;
+    let y = 0;
+    let glyphs = 0;
+    for (let i = 0; i < n; i++) {
+      const g = grid.ground[i] ?? 0;
+      // An upper bound on what the engine draws at the default strength.
+      if (g * 0.45 >= 0.07) glyphs++;
+      if (grid.kind[i] !== 1) continue;
+      ink += g;
+      darkest = Math.max(darkest, g);
+      x += ((i % size.cols) - 0.5) * size.cell * g;
+      y += (Math.floor(i / size.cols) - 0.5) * size.cell * g;
+    }
+    return { darkest, glyphs, ink, x: x / (ink || 1), y: y / (ink || 1) };
+  };
+
+  it("keep the 北冥 whale in view as it wanders", () => {
+    const scene = createScene("beiming");
+    scene.layout(view);
+    let seen = 0;
+    let samples = 0;
+    for (let t = 0; t < 180; t += 1 / 24) {
+      scene.step(1 / 24, envFor({ time: t }));
+      if (Math.round(t * 24) % 48) continue;
+      samples++;
+      if (whaleOf(scene, t).ink > 20) seen++;
+    }
+    expect(seen / samples).toBeGreaterThan(0.9);
+  });
+
+  it("send the whale deeper from the pointer", () => {
+    const run = (touch: boolean) => {
+      const scene = createScene("beiming");
+      scene.layout(view);
+      let t = 0;
+      for (; t < 4; t += 1 / 24) {
+        const { x, y } = whaleOf(scene, t);
+        scene.step(
+          1 / 24,
+          envFor({ pointer: touch ? { x, y } : null, time: t }),
+        );
+      }
+      return whaleOf(scene, t).darkest;
+    };
+    expect(run(true)).toBeLessThan(run(false) * 0.8);
+  });
+
+  it("bring the whale toward dropped ink", () => {
+    const food = { age: 1, x: 1100, y: 120 };
+    const run = (fed: boolean) => {
+      const scene = createScene("beiming");
+      scene.layout(view);
+      let t = 0;
+      for (; t < 12; t += 1 / 24) {
+        const drops = fed ? [{ ...food, age: 1 + (t % 8) }] : [];
+        scene.step(1 / 24, envFor({ drops, time: t }));
+      }
+      const w = whaleOf(scene, t);
+      return Math.hypot(w.x - food.x, w.y - food.y);
+    };
+    expect(run(true)).toBeLessThan(run(false));
+  });
+
+  it("keep 北冥 within the glyph budget at 1920×1080", () => {
+    const size = { cell: 16, cols: 122, height: 1080, rows: 70, width: 1920 };
+    const scene = createScene("beiming");
+    scene.layout(size);
+    let most = 0;
+    for (let t = 0; t < 120; t += 1 / 24) {
+      scene.step(
+        1 / 24,
+        envFor({
+          height: size.height,
+          maskAt: () => 1,
+          time: t,
+          width: size.width,
+        }),
+      );
+      if (Math.round(t * 24) % 72 === 0) {
+        most = Math.max(most, whaleOf(scene, t, size).glyphs);
+      }
+    }
+    expect(most).toBeLessThan(2600);
+  });
+
   it("unroll the 清明 scroll over time and keep it moving", () => {
     const engine = new InkPondEngine(null, { scene: "qingming" });
     engine.resize(1200, 800, 1, 16);

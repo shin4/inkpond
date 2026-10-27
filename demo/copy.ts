@@ -21,6 +21,7 @@ const SCENE_BASE = {
   qingming: { strength: 0.6, tinted: true },
   shanshui: { strength: 0.9, tinted: false },
   jieqi: { strength: 0.6, tinted: true },
+  beiming: { strength: 0.6, tinted: true },
 } as const;
 
 const scene = (
@@ -55,7 +56,7 @@ export const COPY = {
       "— a sea of characters swimming behind the page. Thanks to its author for the idea; Inkpond turns it into ink wash and Chinese glyphs, written from scratch.",
     ],
     cue: "↓ Unroll",
-    facts: ["Canvas 2D", "0 dependencies", "4 scenes", "MIT"],
+    facts: ["Canvas 2D", "0 dependencies", "5 scenes", "MIT"],
     faq: "FAQ",
     h1Hidden: "Inkpond: an ink-wash background of Chinese glyphs for the web",
     intro: [
@@ -64,7 +65,7 @@ export const COPY = {
     ],
     kickers: {
       perf: "PERFORMANCE",
-      scenes: "FOUR SCROLLS",
+      scenes: "FIVE SCROLLS",
       use: "USAGE",
     },
     lang: { href: "../", label: "中文" },
@@ -108,12 +109,18 @@ export const COPY = {
         moves: ["Follows the date", "Each term answers ink", "term pins one"],
         title: "Solar Terms",
       }),
+      scene("beiming", {
+        latin: "北冥 The Northern Deep",
+        line: "The open sea from above. A whale's shadow glides beneath the swell, rising toward the light and sinking out of sight about once a minute; when it swims shallow it leaves flat calm footprints on the surface.",
+        moves: ["Rises and sinks", "Touch it, it dives", "Ink draws it"],
+        title: "Whale",
+      }),
     ],
     stats: [
       ["0", "runtime dependencies"],
       ["0.7", "ms / frame of script on calm water"],
       ["1.9", "ms / frame p95, the whole screen stirred"],
-      ["10–29", "KiB glyph subset per scene, loaded on demand"],
+      ["6–29", "KiB glyph subset per scene, loaded on demand"],
       ["30", "seconds idle and it stops; the next input wakes it"],
     ],
     theme: { dark: "● Dark", light: "○ Light", system: "◐ System" },
@@ -130,7 +137,7 @@ export const COPY = {
       "启发——用字符在页面背后养一片会游动的海。感谢原作者的创意；墨池把它换成了水墨与汉字，代码从头写起。",
     ],
     cue: "↓ 向下展开",
-    facts: ["Canvas 2D", "0 dependencies", "4 scenes", "MIT"],
+    facts: ["Canvas 2D", "0 dependencies", "5 scenes", "MIT"],
     faq: "常见问题",
     h1Hidden: "Inkpond：网页水墨汉字背景库",
     intro: [
@@ -139,14 +146,14 @@ export const COPY = {
     ],
     kickers: {
       perf: "性能 · PERFORMANCE",
-      scenes: "四卷 · FOUR SCROLLS",
+      scenes: "五卷 · FIVE SCROLLS",
       use: "用法 · USAGE",
     },
     lang: { href: "./en/", label: "EN" },
     lede: LEDE,
     licence:
       "字形取自思源宋体（SIL OFL 1.1），改名为 Inkpond Glyphs · 代码以 MIT 许可发布",
-    nav: { scenes: "四卷", session: "发起会话 Demo", use: "用法" },
+    nav: { scenes: "五卷", session: "发起会话 Demo", use: "用法" },
     note: [
       "画布铺满最近的定位父元素；带",
       "的元素周围自动留白，鱼、船、行人也会绕开它。",
@@ -179,12 +186,18 @@ export const COPY = {
         moves: ["随日期轮换", "落墨各有回应", "term 固定一个"],
         title: "二十四节气",
       }),
+      scene("beiming", {
+        latin: "The Northern Deep",
+        line: "俯看一片深海。鲸的影子在浪下缓缓游过，约一分钟浮起又沉没一次；游得浅时，海面会留下一片片平静的鲸迹。",
+        moves: ["浮起又沉没", "触到它就下潜", "落墨引它游近"],
+        title: "北冥",
+      }),
     ],
     stats: [
       ["0", "运行时依赖"],
       ["0.7", "ms / 帧，静水时的脚本开销"],
       ["1.9", "ms / 帧，满屏搅动的 p95"],
-      ["10–29", "KiB，每个场景的字体子集，按需加载"],
+      ["6–29", "KiB，每个场景的字体子集，按需加载"],
       ["30", "秒无操作即停帧，下一次输入再醒"],
     ],
     theme: { dark: "● 暗", light: "○ 亮", system: "◐ 跟随系统" },
