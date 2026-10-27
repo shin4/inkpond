@@ -6,11 +6,11 @@
 
 Key facts:
 
-- Three scenes: `shanshui` (hills in mist, default), `lotus` (lotus pond whose koi avoid the pointer and swim to dropped ink), `qingming` (a handscroll of Along the River During the Qingming Festival that keeps unrolling).
+- Four scenes: `shanshui` (hills in mist, default), `lotus` (lotus pond whose koi avoid the pointer and swim to dropped ink), `qingming` (a handscroll of Along the River During the Qingming Festival that keeps unrolling), `jieqi` (the 24 solar terms, a picture each, chosen by today's date and switching live when the next term begins; `term: "qingming"` pins one, `date` picks a day; `jieqiAt(date)` returns a moment's term).
 - Interaction: the pointer stirs ripples, a click or tap drops ink; elements marked `data-inkpond-avoid` keep a clear zone that koi, boats and walkers steer around.
 - Install: `npm i inkpond` (or the latest commit: `npm i github:shin4/inkpond`). Then `import "inkpond/inkpond.css"` and either `<InkPond scene="lotus" />` from `inkpond/react` (React 18+, marked "use client" so it renders from Next.js Server Components) or `createInkPond(canvas, { scene })` from `inkpond` in any framework (Vue, Svelte, Angular, plain JS).
 - Programmatic input: `pond.ripple(clientX, clientY, strength)` and `pond.drop(clientX, clientY)`.
-- Performance: glyphs are rasterised once into an atlas; 0.2–0.7 ms of script per calm frame, p95 under 1.9 ms when fully stirred (1920×1080, DPR 1.5). Frame rate drops when calm, stops after 30 s idle, pauses in hidden tabs, and steps down on weak devices or software rendering.
+- Performance: glyphs are rasterised once into an atlas; under 1 ms of script per calm frame, about 2 ms p95 when fully stirred (1920×1080, DPR 1.5). Frame rate drops when calm, stops after 30 s idle, pauses in hidden tabs, and steps down on weak devices or software rendering.
 - Accessibility: the canvas is `aria-hidden`; reduced motion draws a still picture; forced-colours mode hides it.
 - Colours: ink and four pale pigments (vermilion, rouge, ochre, indigo) are CSS variables with dark-mode values; `tint: false` for ink only.
 - Licence: code MIT; the bundled glyph subsets of Source Han Serif SC are SIL OFL 1.1, renamed Inkpond Glyphs.
@@ -26,7 +26,7 @@ Key facts:
 
 ## Demos
 
-- [Project page (English)](https://shin4.github.io/inkpond/en/) and [项目主页（中文）](https://shin4.github.io/inkpond/): all three scenes live, with tint and ink-depth controls
+- [Project page (English)](https://shin4.github.io/inkpond/en/) and [项目主页（中文）](https://shin4.github.io/inkpond/): all four scenes live, with tint and ink-depth controls
 - [Session demo](https://shin4.github.io/inkpond/session/): the background behind an AI chat start screen
 
 ## Optional

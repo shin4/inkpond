@@ -20,6 +20,7 @@ const SCENE_BASE = {
   lotus: { strength: 0.6, tinted: true },
   qingming: { strength: 0.6, tinted: true },
   shanshui: { strength: 0.9, tinted: false },
+  jieqi: { strength: 0.6, tinted: true },
 } as const;
 
 const scene = (
@@ -54,7 +55,7 @@ export const COPY = {
       "— a sea of characters swimming behind the page. Thanks to its author for the idea; Inkpond turns it into ink wash and Chinese glyphs, written from scratch.",
     ],
     cue: "↓ Unroll",
-    facts: ["Canvas 2D", "0 dependencies", "3 scenes", "MIT"],
+    facts: ["Canvas 2D", "0 dependencies", "4 scenes", "MIT"],
     faq: "FAQ",
     h1Hidden: "Inkpond: an ink-wash background of Chinese glyphs for the web",
     intro: [
@@ -63,7 +64,7 @@ export const COPY = {
     ],
     kickers: {
       perf: "PERFORMANCE",
-      scenes: "THREE SCROLLS",
+      scenes: "FOUR SCROLLS",
       use: "USAGE",
     },
     lang: { href: "../", label: "中文" },
@@ -101,12 +102,18 @@ export const COPY = {
         moves: ["The scroll unrolls", "Boatmen pole", "Ink scatters walkers"],
         title: "Qingming",
       }),
+      scene("jieqi", {
+        latin: "二十四节气 The 24 Solar Terms",
+        line: "A picture for each of the twenty-four solar terms, chosen by today's date: ice cracking at the Start of Spring, frogs' calls ringing across the pond, geese shifting formation, frost growing in from the edges, one vermilion sun in the longest night. Keep the page open into the next term and it bleeds over in ink.",
+        moves: ["Follows the date", "Each term answers ink", "term pins one"],
+        title: "Solar Terms",
+      }),
     ],
     stats: [
       ["0", "runtime dependencies"],
       ["0.7", "ms / frame of script on calm water"],
       ["1.9", "ms / frame p95, the whole screen stirred"],
-      ["10–21", "KiB glyph subset per scene, loaded on demand"],
+      ["10–29", "KiB glyph subset per scene, loaded on demand"],
       ["30", "seconds idle and it stops; the next input wakes it"],
     ],
     theme: { dark: "● Dark", light: "○ Light", system: "◐ System" },
@@ -123,7 +130,7 @@ export const COPY = {
       "启发——用字符在页面背后养一片会游动的海。感谢原作者的创意；墨池把它换成了水墨与汉字，代码从头写起。",
     ],
     cue: "↓ 向下展开",
-    facts: ["Canvas 2D", "0 dependencies", "3 scenes", "MIT"],
+    facts: ["Canvas 2D", "0 dependencies", "4 scenes", "MIT"],
     faq: "常见问题",
     h1Hidden: "Inkpond：网页水墨汉字背景库",
     intro: [
@@ -132,14 +139,14 @@ export const COPY = {
     ],
     kickers: {
       perf: "性能 · PERFORMANCE",
-      scenes: "三卷 · THREE SCROLLS",
+      scenes: "四卷 · FOUR SCROLLS",
       use: "用法 · USAGE",
     },
     lang: { href: "./en/", label: "EN" },
     lede: LEDE,
     licence:
       "字形取自思源宋体（SIL OFL 1.1），改名为 Inkpond Glyphs · 代码以 MIT 许可发布",
-    nav: { scenes: "三卷", session: "发起会话 Demo", use: "用法" },
+    nav: { scenes: "四卷", session: "发起会话 Demo", use: "用法" },
     note: [
       "画布铺满最近的定位父元素；带",
       "的元素周围自动留白，鱼、船、行人也会绕开它。",
@@ -166,12 +173,18 @@ export const COPY = {
         moves: ["长卷自己展开", "船夫撑船", "落墨惊散行人"],
         title: "清明上河",
       }),
+      scene("jieqi", {
+        latin: "The 24 Solar Terms",
+        line: "二十四节气，一节一画，按今天的日期自动选：立春冰裂、立夏蛙鸣、寒露雁阵变换、霜降霜花从边缘结出、冬至长夜里一点朱阳。页面开着跨入下一个节气，会以墨晕过渡过去。",
+        moves: ["随日期轮换", "落墨各有回应", "term 固定一个"],
+        title: "二十四节气",
+      }),
     ],
     stats: [
       ["0", "运行时依赖"],
       ["0.7", "ms / 帧，静水时的脚本开销"],
       ["1.9", "ms / 帧，满屏搅动的 p95"],
-      ["10–21", "KiB，每个场景的字体子集，按需加载"],
+      ["10–29", "KiB，每个场景的字体子集，按需加载"],
       ["30", "秒无操作即停帧，下一次输入再醒"],
     ],
     theme: { dark: "● 暗", light: "○ 亮", system: "◐ 跟随系统" },

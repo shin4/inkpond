@@ -1,7 +1,7 @@
 {
   "name": "inkpond",
   "version": "0.1.0",
-  "description": "An ink-wash background of Chinese glyphs for the web: hills in mist, a lotus pond with koi, and the Qingming handscroll. Ripples follow the pointer, clicks drop ink.",
+  "description": "An ink-wash background of Chinese glyphs for the web: hills in mist, a lotus pond with koi, the Qingming handscroll, and the 24 solar terms by date. Ripples follow the pointer, clicks drop ink.",
   "keywords": [
     "canvas",
     "background",
@@ -11,6 +11,8 @@
     "shanshui",
     "qingming",
     "koi",
+    "solar-terms",
+    "jieqi",
     "react",
     "animation"
   ],

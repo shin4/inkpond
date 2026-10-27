@@ -72,7 +72,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "Who is it for, and where does it fit?",
     },
     {
-      a: "An empty landing or chat screen feels bare, while video backgrounds and large images are heavy and compete with the content. Inkpond gives the page a moving, pointer-aware background for very little (a glyph subset of 10–21 KiB per scene, no runtime dependencies) and keeps clear of the content, so text stays readable and the page stays fast.",
+      a: "An empty landing or chat screen feels bare, while video backgrounds and large images are heavy and compete with the content. Inkpond gives the page a moving, pointer-aware background for very little (a glyph subset of 10–29 KiB per scene, no runtime dependencies) and keeps clear of the content, so text stays readable and the page stays fast.",
       q: "What problem does it solve?",
     },
     {
@@ -99,7 +99,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "How do I use it in Svelte?",
     },
     {
-      a: "Three: `shanshui` (the default) is two ranges of hills in mist; `lotus` is a lotus pond whose koi flee the pointer and swim to dropped ink; `qingming` is a handscroll that keeps unrolling, with city walls, a pagoda, the rainbow bridge, boats and walkers. Lotus and Qingming carry a touch of pale colour, or ink only with `tint: false`.",
+      a: "Four: `shanshui` (the default) is two ranges of hills in mist; `lotus` is a lotus pond whose koi flee the pointer and swim to dropped ink; `qingming` is a handscroll that keeps unrolling, with city walls, a pagoda, the rainbow bridge, boats and walkers; `jieqi` is the twenty-four solar terms, a moving picture for each that changes with the date (or pin one with `term`). Lotus, Qingming and the solar terms carry a touch of pale colour, or ink only with `tint: false`.",
       q: "What scenes are there?",
     },
     {
@@ -107,7 +107,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "How is it different from Vanta.js or tsParticles?",
     },
     {
-      a: "Not noticeably. Each glyph is rasterised once and every frame only copies from the atlas; measured at 1920×1080 and DPR 1.5, the script takes a median of 0.2–0.7 ms per frame, and the p95 stays under 1.9 ms when the whole screen is stirred. It lowers its frame rate when calm, stops after 30 s idle, pauses in hidden tabs, and steps down to a lite tier or a still picture on weak devices or software rendering.",
+      a: "Not noticeably. Each glyph is rasterised once and every frame only copies from the atlas; measured at 1920×1080 and DPR 1.5, the script takes a median of under 1 ms per calm frame, and about 2 ms at the p95 when the whole screen is stirred; the busiest solar terms cost about the same as Qingming. It lowers its frame rate when calm, stops after 30 s idle, pauses in hidden tabs, and steps down to a lite tier or a still picture on weak devices or software rendering.",
       q: "Will it slow the page down or drain the battery?",
     },
     {
@@ -131,7 +131,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "Can I use it commercially? What is the licence?",
     },
     {
-      a: "From Source Han Serif SC Medium. Each scene ships only the glyphs it uses, 10–21 KiB each, loaded only when that scene is. As the OFL requires, the subsets are renamed Inkpond Glyphs.",
+      a: "From Source Han Serif SC Medium. Each scene ships only the glyphs it uses, 10–29 KiB each (the 24 solar terms share one), loaded only when that scene is. As the OFL requires, the subsets are renamed Inkpond Glyphs.",
       q: "Where does the font come from, and how much does it load?",
     },
     {
@@ -149,7 +149,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "墨池给谁用？适合用在哪里？",
     },
     {
-      a: "空白的首页或对话页显得冷清，而视频背景或大图又重又抢内容。墨池用很少的资源（每个场景十几 KiB 的字体子集，无运行时依赖）给页面一层会动、会回应鼠标的水墨背景，同时自动避开页面上的内容，不遮挡文字，也不拖慢页面。",
+      a: "空白的首页或对话页显得冷清，而视频背景或大图又重又抢内容。墨池用很少的资源（每个场景十到三十 KiB 的字体子集，无运行时依赖）给页面一层会动、会回应鼠标的水墨背景，同时自动避开页面上的内容，不遮挡文字，也不拖慢页面。",
       q: "墨池解决什么问题？",
     },
     {
@@ -176,7 +176,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "在 Svelte 里怎么用？",
     },
     {
-      a: "有三个场景：`shanshui`（山水，默认）是两重远山与云雾；`lotus`（荷塘）是荷叶荷花，鲤鱼会躲开鼠标、游向落墨处；`qingming`（清明上河）是一卷不断展开的长卷，有城郭、宝塔、虹桥、船只和行人。荷塘和清明带淡彩，也可以只用墨色。",
+      a: "有四个场景：`shanshui`（山水，默认）是两重远山与云雾；`lotus`（荷塘）是荷叶荷花，鲤鱼会躲开鼠标、游向落墨处；`qingming`（清明上河）是一卷不断展开的长卷，有城郭、宝塔、虹桥、船只和行人；`jieqi`（二十四节气）一节一画，按日期自动切换，也可以用 `term` 固定某一个。荷塘、清明和节气带淡彩，也可以只用墨色。",
       q: "有哪些场景？",
     },
     {
@@ -184,7 +184,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "和 Vanta.js、tsParticles 有什么不同？",
     },
     {
-      a: "不会明显拖慢。每个字只栅格化一次，之后每帧只贴图；实测（1920×1080，DPR 1.5）每帧脚本耗时中位数 0.2–0.7 ms，满屏搅动时 p95 不超过 1.9 ms。画面静下来会降帧，30 秒无操作就停帧；标签页隐藏时暂停；弱设备或软件渲染时自动降到轻量档或静止画面。",
+      a: "不会明显拖慢。每个字只栅格化一次，之后每帧只贴图；实测（1920×1080，DPR 1.5）静水时每帧脚本耗时中位数不到 1 ms，满屏搅动时 p95 约 2 ms；最繁忙的节气画面和清明上河相当。画面静下来会降帧，30 秒无操作就停帧；标签页隐藏时暂停；弱设备或软件渲染时自动降到轻量档或静止画面。",
       q: "会不会拖慢页面、耗电？",
     },
     {
@@ -208,7 +208,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "可以商用吗？是什么许可？",
     },
     {
-      a: "字形来自思源宋体 SC Medium（Source Han Serif），每个场景只带自己用到的字，约 10–21 KiB 一个，用到哪个场景才加载哪个。按 OFL 规定改名为 Inkpond Glyphs。",
+      a: "字形来自思源宋体 SC Medium（Source Han Serif），每个场景只带自己用到的字，约 10–29 KiB 一个（二十四节气共用一个），用到哪个场景才加载哪个。按 OFL 规定改名为 Inkpond Glyphs。",
       q: "字体从哪里来？要额外加载多少？",
     },
     {
@@ -243,7 +243,7 @@ const PAGE = {
       "。",
     ],
     licence: "代码以 MIT 许可发布 · 字体按 SIL OFL 1.1 授权",
-    nav: { scenes: "三卷", use: "用法" },
+    nav: { scenes: "四卷", use: "用法" },
   },
 } as const;
 

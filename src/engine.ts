@@ -28,6 +28,7 @@ import {
   type SceneGrid,
 } from "./scene.js";
 import { createScene, type SceneName } from "./scenes/index.js";
+import type { JieqiTerm } from "./scenes/jieqi/calendar.js";
 
 export interface InkPondRect {
   left: number;
@@ -72,10 +73,20 @@ interface Drop {
 }
 
 export interface InkPondEngineOptions {
-  /** The picture: "shanshui" (default), "lotus" or "qingming". */
+  /** The picture: "shanshui" (default), "lotus", "qingming" or "jieqi". */
   scene?: SceneName;
-  /** Stroke-density ramp of the scene's main ground, lightest level first. */
+  /**
+   * Stroke-density ramp of the scene's main ground, lightest level first.
+   * The 节气 scene has a ramp per term and ignores it.
+   */
   levels?: readonly string[];
+  /** 节气 only: show this solar term, whatever the date. */
+  term?: JieqiTerm;
+  /**
+   * 节气 only: show the term this date falls in. Without term or date the
+   * scene shows today's and moves on when the next term begins.
+   */
+  date?: Date | number;
   /** Ink weight of the scene's picture (浓淡). Water and blots keep their own. */
   strength?: number;
   /** Ripple speed multiplier; 1 is the slow 荡漾 the defaults are tuned to. */
@@ -156,6 +167,7 @@ export class InkPondEngine {
     this.scene = createScene(
       options.scene,
       options.levels?.length ? options.levels : undefined,
+      { date: options.date, term: options.term },
     );
     this.strength = options.strength ?? 0.45;
     this.c2 = Math.min(0.24, WAVE_C2 * (options.waveSpeed ?? 1) ** 2);

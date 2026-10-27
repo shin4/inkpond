@@ -19,9 +19,9 @@ An ink-wash background of Chinese glyphs for the web.
   <img alt="The Qingming handscroll unrolling to the left: a timber rainbow bridge arches from the near bank over the river, boats pass, the pointer stirs ripples and a click spreads ink" src="docs/images/qingming-light.webp" />
 </picture>
 
-Chinese characters, laid out by stroke density, become a picture: distant hills in mist, a lotus pond with koi, or a slowly unrolling handscroll of *Along the River During the Qingming Festival*. The pointer stirs ripples, a click drops ink that spreads and fades, and page content keeps a clear zone around it.
+Chinese characters, laid out by stroke density, become a picture: distant hills in mist, a lotus pond with koi, a slowly unrolling handscroll of *Along the River During the Qingming Festival*, or the twenty-four solar terms, changing with the date. The pointer stirs ripples, a click drops ink that spreads and fades, and page content keeps a clear zone around it.
 
-- **Three scenes**: hills, lotus pond and the Qingming scroll, with optional pale colour
+- **Four scenes**: hills, lotus pond, the Qingming scroll, and the 24 solar terms that follow the date, with optional pale colour
 - **Responsive**: ripples follow the pointer, clicks drop ink, koi flee and come to feed, walkers scatter from the ink
 - **Out of the way**: content gets a clear zone, and koi, boats and walkers steer around it
 - **Light**: Canvas 2D, zero runtime dependencies, under 2 ms of script per frame, steps down on weak devices
@@ -34,8 +34,48 @@ Chinese characters, laid out by stroke density, become a picture: distant hills 
 | `shanshui` (default) | Two ranges of distant hills, mist drifting past | The mist |
 | `lotus` | A lotus pond seen from above: leaves, flowers, duckweed | Koi swim around content, scatter from the pointer and come to where ink drops |
 | `qingming` | The Qingming handscroll: mountains and city walls, a pagoda and gate towers, taverns along both banks, a timber rainbow bridge across the river | The scroll unrolls to the left, boatmen pole, walkers cross the bridge, ink scatters them |
+| `jieqi` | The 24 solar terms (节气), one picture each; by default the term today falls in | See the table below; if the page stays open into the next term, it bleeds over to it in ink |
 
-The lotus and Qingming scenes use a touch of pale colour (vermilion, rouge, ochre, indigo); set `tint={false}` for ink only.
+The lotus, Qingming and solar-term scenes use a touch of pale colour (vermilion, rouge, ochre, indigo); set `tint={false}` for ink only.
+
+### The 24 solar terms
+
+`scene="jieqi"` finds today's term from the sun's ecliptic longitude (to within about a quarter of an hour). Pin one with `term`, or show a given day's with `date`:
+
+```tsx
+<InkPond scene="jieqi" />                          // today's term, following the clock
+<InkPond scene="jieqi" term="shuangjiang" />       // Frost's Descent only
+<InkPond scene="jieqi" date={new Date(2027, 0, 20)} /> // that day's term (Major Cold)
+```
+
+`jieqiAt(date)` returns the `term` a moment falls in, and `JIEQI` lists all 24 (`id`, name, longitude).
+
+| Term | `term` | Picture | On a click / the pointer |
+| --- | --- | --- | --- |
+| 立春 Start of Spring | `lichun` | Ice cracks open from a point; sprouts (芽) push up along the cracks | The ink starts a new crack |
+| 雨水 Rain Water | `yushui` | Slanting 雨 rain rings the water below | The pointer sets the wind |
+| 惊蛰 Awakening of Insects | `jingzhe` | Lightning splits the frame with a flash; 虫 insects are thrown from the ground | Lightning strikes the ink |
+| 春分 Spring Equinox | `chunfen` | Half day, half night, split by a living vermilion seam that swallows cross | The seam follows the pointer |
+| 清明 Clear and Bright | `qingming` | Willow strands sway; a vermilion kite; drizzle | The pointer parts the willows |
+| 谷雨 Grain Rain | `guyu` | Peonies open in layers; petals drift in the rain | A new flower opens at the ink |
+| 立夏 Start of Summer | `lixia` | Frog croaks ring out and interfere | Frogs croak faster near the pointer; the ink rings too |
+| 小满 Grain Buds | `xiaoman` | Waves roll through the wheat | The wheat bows under the pointer |
+| 芒种 Grain in Ear | `mangzhong` | A vermilion planting line sweeps the paddy, leaving rows of seedlings | The line moves to the ink |
+| 夏至 Summer Solstice | `xiazhi` | A vermilion sun with turning rays; heat shimmer on the ground | The sun drifts after the pointer |
+| 小暑 Minor Heat | `xiaoshu` | Heat rises in warped plumes; cicadas call | A cool breeze at the pointer |
+| 大暑 Major Heat | `dashu` | Fireflies wander over night grass, trailing light | Fireflies gather to the pointer |
+| 立秋 Start of Autumn | `liqiu` | An empty frame; one leaf (叶) falls into the water | The pointer blows the leaf aside |
+| 处暑 End of Heat | `chushu` | A turbulent front pushes the vermilion heat off the frame; a hawk circles | Cooling at the pointer |
+| 白露 White Dew | `bailu` | Dew beads swell on the grass, then run down | A touched bead runs |
+| 秋分 Autumn Equinox | `qiufen` | A full moon halved by a slowly turning vermilion diameter | The diameter points at the pointer |
+| 寒露 Cold Dew | `hanlu` | Geese fly in a skein that shifts between the 人 and 一 formations; chrysanthemums below | The skein avoids the pointer |
+| 霜降 Frost's Descent | `shuangjiang` | Six-armed frost grows in from the edges; vermilion maple leaves fall | The pointer's warmth melts the frost |
+| 立冬 Start of Winter | `lidong` | Waves slow until they freeze into ice, crack and thaw | The ink adds a wave source |
+| 小雪 Minor Snow | `xiaoxue` | Sparse snow at three depths | The pointer blows the flakes aside |
+| 大雪 Major Snow | `daxue` | Driving snow builds drifts on the ground | The pointer sets the wind |
+| 冬至 Winter Solstice | `dongzhi` | In the longest night a vermilion 阳 pushes back the ink; a ring of 81 dots turns to plum one by one (counting the nines) | 阳 follows the pointer |
+| 小寒 Minor Cold | `xiaohan` | A plum branch grows stroke by stroke and blossoms at its tips | Blossoms open at the ink |
+| 大寒 Major Cold | `dahan` | Fireworks burst over a frozen grid | A firework goes up at the ink |
 
 | Lotus | Shanshui |
 | --- | --- |
@@ -126,12 +166,14 @@ Both do nothing while paused, in reduced motion and on the still tier.
 
 | Option | Default | Meaning |
 | --- | --- | --- |
-| `scene` | `"shanshui"` | `shanshui` / `lotus` / `qingming` |
+| `scene` | `"shanshui"` | `shanshui` / `lotus` / `qingming` / `jieqi` |
+| `term` | today's term | `jieqi` only: show this solar term, e.g. `"qingming"` |
+| `date` | now | `jieqi` only: show this day's term, and stay on it |
 | `tint` | `true` | Draw pale colour; `false` for ink only |
 | `active` | `true` | Whether the view is on screen; background tabs always pause |
 | `strength` | `0.45` | Ink depth of the scene; ripples and ink drops are not affected |
 | `waveSpeed` | `1` | Wave speed multiplier |
-| `levels` | per scene | Glyph levels for the main ground (the hills, or the water in lotus and Qingming), light to dark; other glyphs need your own font |
+| `levels` | per scene | Glyph levels for the main ground (the hills, or the water in lotus and Qingming), light to dark; other glyphs need your own font; not used by the solar terms |
 | `reducedMotion` | follows the system | When on, draws one still picture and ignores the pointer |
 | `avoidAttribute` | `data-inkpond-avoid` | Attribute that marks clear zones |
 | `avoidPadding` | `20` | Fully clear margin around those elements (CSS px) |
@@ -161,7 +203,7 @@ Headless Chrome, 1920×1080, DPR 1.5, script time per frame as median / p95, bud
 | Lotus | 0.2 / 0.3 ms | 1.1 / 1.9 ms | < 0.1 ms |
 | Qingming | 0.7 / 0.9 ms | 1.3 / 1.7 ms | 0.2 ms |
 
-Nearly all of it is image copies. With the GPU off and CPU rasterisation, a fully stirred frame takes about 9 ms, which is what the starting tier and the step-down are for. Step-down rules: a median over the last 10 frames above 16 ms, or a frame gap over 60 ms, goes straight to still; every 60 frames, a p95 above 8 ms or a gap over 40 ms steps down one tier. The atlas is a 16-column grid (Qingming at DPR 2 is 640×1400px), well inside the 4096px texture limit of many mobile GPUs.
+Nearly all of it is image copies. All 24 solar-term pictures are drawn to the same budget: at most about 2,600 glyphs per calm frame at that size, about as many as Qingming. With the GPU off and CPU rasterisation, a fully stirred frame takes about 9 ms, which is what the starting tier and the step-down are for. Step-down rules: a median over the last 10 frames above 16 ms, or a frame gap over 60 ms, goes straight to still; every 60 frames, a p95 above 8 ms or a gap over 40 ms steps down one tier. The atlas is a 16-column grid (Qingming at DPR 2 is 640×1400px), well inside the 4096px texture limit of many mobile GPUs.
 
 </details>
 
@@ -174,6 +216,7 @@ Each scene ships a subset of Source Han Serif SC Medium (SIL OFL 1.1) with only 
 | `inkpond-shanshui.woff2` | 39 | about 10 KiB |
 | `inkpond-lotus.woff2` | 66 | about 16 KiB |
 | `inkpond-qingming.woff2` | 101 | about 21 KiB |
+| `inkpond-jieqi.woff2` | 129 | about 29 KiB (one for all 24 terms) |
 
 The OFL forbids modified versions from using the Reserved Font Name "Source", so the subsets are renamed **Inkpond Glyphs**. The licence and a note of the changes are in `src/assets/OFL.txt`.
 

@@ -284,6 +284,12 @@ main section {
   top: auto;
   bottom: 9vh;
 }
+.scene-jieqi .caption {
+  top: auto;
+  bottom: 9vh;
+  left: auto;
+  right: var(--gutter);
+}
 .numeral {
   display: block;
   margin: -6px 0 4px -3px;
@@ -476,7 +482,8 @@ pre {
   }
   .scene .caption,
   .scene-lotus .caption,
-  .scene-qingming .caption {
+  .scene-qingming .caption,
+  .scene-jieqi .caption {
     top: auto;
     right: auto;
     left: var(--gutter);

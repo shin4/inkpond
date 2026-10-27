@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { InkPond as Pond } from "../src/controller";
 import { InkPond } from "../src/react";
 import type { SceneName } from "../src/scenes";
+import { JIEQI, type JieqiTerm } from "../src/scenes/jieqi/calendar";
 import { Conversation, type Message } from "./Conversation";
 import { NewSession } from "./NewSession";
 
@@ -11,7 +12,10 @@ const SCENE_LABELS: Record<SceneName, string> = {
   lotus: "荷塘",
   qingming: "清明上河",
   shanshui: "山水",
+  jieqi: "二十四节气",
 };
+/** 节气: today's term, or one picked to look at. */
+type TermChoice = "today" | JieqiTerm;
 
 /** A remembered choice, or the fallback when there is none (or no storage). */
 const recall = <T extends string>(
@@ -51,8 +55,9 @@ export const App = () => {
     recall("inkpond-demo.theme", ["light", "dark"], "system"),
   );
   const [scene, setScene] = useState<SceneName>(() =>
-    recall("inkpond-demo.scene", ["lotus", "qingming"], "shanshui"),
+    recall("inkpond-demo.scene", ["lotus", "qingming", "jieqi"], "shanshui"),
   );
+  const [term, setTerm] = useState<TermChoice>("today");
   const [tint, setTint] = useState(true);
   const [messages, setMessages] = useState<Message[]>([]);
   const [strength, setStrength] = useState(0.45);
@@ -139,6 +144,22 @@ export const App = () => {
               ))}
             </select>
           </label>
+          {scene === "jieqi" ? (
+            <label className="select">
+              <span className="sr-only">节气</span>
+              <select
+                onChange={(event) => setTerm(event.target.value as TermChoice)}
+                value={term}
+              >
+                <option value="today">今日节气</option>
+                {JIEQI.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : null}
           <label className="select">
             <span className="sr-only">主题</span>
             <select
@@ -158,9 +179,10 @@ export const App = () => {
         {empty ? (
           <InkPond
             avoidFade={72}
-            key={`${scene}-${tint}-${strength}-${waveSpeed}`}
+            key={`${scene}-${term}-${tint}-${strength}-${waveSpeed}`}
             pondRef={pondRef}
             scene={scene}
+            term={scene === "jieqi" && term !== "today" ? term : undefined}
             strength={strength}
             tint={tint}
             waveSpeed={waveSpeed}
