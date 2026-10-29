@@ -19,10 +19,10 @@ An ink-wash background of Chinese glyphs for the web.
   <img alt="The Qingming handscroll unrolling to the left: a timber rainbow bridge arches from the near bank over the river, boats pass, the pointer stirs ripples and a click spreads ink" src="docs/images/qingming-light.webp" />
 </picture>
 
-Chinese characters, laid out by stroke density, become a picture: distant hills in mist, a lotus pond with koi, a slowly unrolling handscroll of *Along the River During the Qingming Festival*, the twenty-four solar terms, changing with the date, or a deep sea with a whale passing beneath it. The pointer stirs ripples, a click drops ink that spreads and fades, and page content keeps a clear zone around it.
+Chinese characters, laid out by stroke density, become a picture: distant hills in mist, a lotus pond with koi, a slowly unrolling handscroll of *Along the River During the Qingming Festival*, the twenty-four solar terms, changing with the date, a deep sea with a whale passing beneath it, or a very fat whale guarding a bowl of rice. The pointer stirs ripples, a click drops ink that spreads and fades, and page content keeps a clear zone around it.
 
-- **Five scenes**: hills, lotus pond, the Qingming scroll, the 24 solar terms that follow the date, and a whale in the deep sea, with optional pale colour
-- **Responsive**: ripples follow the pointer, clicks drop ink, koi flee and come to feed, walkers scatter from the ink, the whale dives when touched
+- **Six scenes**: hills, lotus pond, the Qingming scroll, the 24 solar terms that follow the date, a whale in the deep sea, and a silly fat whale, with optional pale colour
+- **Responsive**: ripples follow the pointer, clicks drop ink, koi flee and come to feed, walkers scatter from the ink, the whale dives when touched, the fat whale laughs when poked
 - **Out of the way**: content gets a clear zone, and koi, boats and walkers steer around it
 - **Light**: Canvas 2D, zero runtime dependencies, under 2 ms of script per frame, steps down on weak devices
 - **React optional**: an `<InkPond />` component, or use it without React
@@ -36,8 +36,9 @@ Chinese characters, laid out by stroke density, become a picture: distant hills 
 | `qingming` | The Qingming handscroll: mountains and city walls, a pagoda and gate towers, taverns along both banks, a timber rainbow bridge across the river | The scroll unrolls to the left, boatmen pole, walkers cross the bridge, ink scatters them |
 | `jieqi` | The 24 solar terms (节气), one picture each; by default the term today falls in | See the table below; if the page stays open into the next term, it bleeds over to it in ink |
 | `beiming` | 北冥, the northern deep: the open sea from above, a whale's shadow under the swell | The whale glides by, rising and sinking about once a minute and leaving flat calm footprints when shallow; touched by the pointer it dives, and ink draws it near |
+| `dafeijing` | 大肥鲸, the big fat whale: a round whale and a bowl of white rice in a corner; the rice is bare paper, with a few 米 along the top of the heap | When hungry it swims over and buries its face in the bowl: rice flies into its mouth, the heap goes down and the whale swells. Full, it burps, spouts rice from its blowhole and goes flat again while the bowl refills. Ink scatters rice for it to chase, and a poke squashes it, wobbles it and makes it laugh 哈 |
 
-The lotus, Qingming, solar-term and whale scenes use a touch of pale colour (vermilion, rouge, ochre, indigo); set `tint={false}` for ink only.
+The lotus, Qingming, solar-term, whale and fat-whale scenes use a touch of pale colour (vermilion, rouge, ochre, indigo); set `tint={false}` for ink only.
 
 ### The 24 solar terms
 
@@ -167,7 +168,7 @@ Both do nothing while paused, in reduced motion and on the still tier.
 
 | Option | Default | Meaning |
 | --- | --- | --- |
-| `scene` | `"shanshui"` | `shanshui` / `lotus` / `qingming` / `jieqi` / `beiming` |
+| `scene` | `"shanshui"` | `shanshui` / `lotus` / `qingming` / `jieqi` / `beiming` / `dafeijing` |
 | `term` | today's term | `jieqi` only: show this solar term, e.g. `"qingming"` |
 | `date` | now | `jieqi` only: show this day's term, and stay on it |
 | `tint` | `true` | Draw pale colour; `false` for ink only |
@@ -175,7 +176,7 @@ Both do nothing while paused, in reduced motion and on the still tier.
 | `strength` | `0.45` | Ink depth of the scene; ripples and ink drops are not affected |
 | `waveSpeed` | `1` | Wave speed multiplier |
 | `cellSize` | the tier's (16) | Glyph cell in CSS px, 12–48: the glyph size; smaller draws more glyphs and costs more; after a step down it never goes below that tier's cell (22 on lite) |
-| `levels` | per scene | Glyph levels for the main ground (the hills, the water in lotus and Qingming, or the sea in beiming), light to dark; other glyphs need your own font; not used by the solar terms |
+| `levels` | per scene | Glyph levels for the main ground (the hills, the water in lotus and Qingming, or the sea in beiming and dafeijing), light to dark; other glyphs need your own font; not used by the solar terms |
 | `reducedMotion` | follows the system | When on, draws one still picture and ignores the pointer |
 | `avoidAttribute` | `data-inkpond-avoid` | Attribute that marks clear zones |
 | `avoidPadding` | `20` | Fully clear margin around those elements (CSS px) |
@@ -221,6 +222,7 @@ Each scene ships a subset of Source Han Serif SC Medium (SIL OFL 1.1) with only 
 | `inkpond-qingming.woff2` | 101 | about 21 KiB |
 | `inkpond-jieqi.woff2` | 129 | about 29 KiB (one for all 24 terms) |
 | `inkpond-beiming.woff2` | 21 | about 6 KiB |
+| `inkpond-dafeijing.woff2` | 27 | about 6 KiB |
 
 The OFL forbids modified versions from using the Reserved Font Name "Source", so the subsets are renamed **Inkpond Glyphs**. The licence and a note of the changes are in `src/assets/OFL.txt`.
 

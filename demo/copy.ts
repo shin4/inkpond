@@ -22,6 +22,7 @@ const SCENE_BASE = {
   shanshui: { strength: 0.9, tinted: false },
   jieqi: { strength: 0.6, tinted: true },
   beiming: { strength: 0.6, tinted: true },
+  dafeijing: { strength: 0.6, tinted: true },
 } as const;
 
 const scene = (
@@ -56,7 +57,7 @@ export const COPY = {
       "— a sea of characters swimming behind the page. Thanks to its author for the idea; Inkpond turns it into ink wash and Chinese glyphs, written from scratch.",
     ],
     cue: "↓ Unroll",
-    facts: ["Canvas 2D", "0 dependencies", "5 scenes", "MIT"],
+    facts: ["Canvas 2D", "0 dependencies", "6 scenes", "MIT"],
     faq: "FAQ",
     h1Hidden: "Inkpond: an ink-wash background of Chinese glyphs for the web",
     intro: [
@@ -65,7 +66,7 @@ export const COPY = {
     ],
     kickers: {
       perf: "PERFORMANCE",
-      scenes: "FIVE SCROLLS",
+      scenes: "SIX SCROLLS",
       use: "USAGE",
     },
     lang: { href: "../", label: "中文" },
@@ -115,6 +116,16 @@ export const COPY = {
         moves: ["Rises and sinks", "Touch it, it dives", "Ink draws it"],
         title: "Whale",
       }),
+      scene("dafeijing", {
+        latin: "大肥鲸 The Big Fat Whale",
+        line: "A very round whale and a bowl of white rice, the rice left as bare paper. Hungry, it buries its face in the bowl and swells as it eats; full, it burps, spouts rice from its blowhole and goes flat again.",
+        moves: [
+          "Eats, swells, burps",
+          "Poke it, it laughs",
+          "Ink scatters rice",
+        ],
+        title: "Big Fat Whale",
+      }),
     ],
     stats: [
       ["0", "runtime dependencies"],
@@ -137,7 +148,7 @@ export const COPY = {
       "启发——用字符在页面背后养一片会游动的海。感谢原作者的创意；墨池把它换成了水墨与汉字，代码从头写起。",
     ],
     cue: "↓ 向下展开",
-    facts: ["Canvas 2D", "0 dependencies", "5 scenes", "MIT"],
+    facts: ["Canvas 2D", "0 dependencies", "6 scenes", "MIT"],
     faq: "常见问题",
     h1Hidden: "Inkpond：网页水墨汉字背景库",
     intro: [
@@ -146,14 +157,14 @@ export const COPY = {
     ],
     kickers: {
       perf: "性能 · PERFORMANCE",
-      scenes: "五卷 · FIVE SCROLLS",
+      scenes: "六卷 · SIX SCROLLS",
       use: "用法 · USAGE",
     },
     lang: { href: "./en/", label: "EN" },
     lede: LEDE,
     licence:
       "字形取自思源宋体（SIL OFL 1.1），改名为 Inkpond Glyphs · 代码以 MIT 许可发布",
-    nav: { scenes: "五卷", session: "发起会话 Demo", use: "用法" },
+    nav: { scenes: "六卷", session: "发起会话 Demo", use: "用法" },
     note: [
       "画布铺满最近的定位父元素；带",
       "的元素周围自动留白，鱼、船、行人也会绕开它。",
@@ -191,6 +202,12 @@ export const COPY = {
         line: "俯看一片深海。鲸的影子在浪下缓缓游过，约一分钟浮起又沉没一次；游得浅时，海面会留下一片片平静的鲸迹。",
         moves: ["浮起又沉没", "触到它就下潜", "落墨引它游近"],
         title: "北冥",
+      }),
+      scene("dafeijing", {
+        latin: "The Big Fat Whale",
+        line: "一条圆滚滚的鲸，守着一碗白米饭——饭是留白。饿了就埋头干饭，越吃越胖；吃撑了打个嗝，从喷气孔喷出一串米，瘪回原样。",
+        moves: ["干饭变胖打嗝", "戳它会笑", "落墨撒一把米"],
+        title: "大肥鲸",
       }),
     ],
     stats: [

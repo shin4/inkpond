@@ -206,6 +206,133 @@ describe("scenes", () => {
     expect(most).toBeLessThan(2600);
   });
 
+  /** What the 大肥鲸 scene draws at time t: the stamps it emits by glyph. */
+  const said = (scene: InkPondScene, env: SceneEnv) => {
+    const out: string[] = [];
+    scene.stamps(env, (glyph, x, y) => {
+      const ch = scene.glyphs[glyph];
+      if (ch) out.push(ch);
+    });
+    return out;
+  };
+
+  /** Cells of the 大肥鲸 grid left bare for the rice. */
+  const riceOf = (scene: InkPondScene, time: number) => {
+    const n = view.cols * view.rows;
+    const grid = {
+      ground: new Float32Array(n),
+      kind: new Uint8Array(n),
+      pigment: new Uint8Array(n),
+      wet: new Float32Array(n),
+    };
+    scene.compose(grid, 0, time);
+    return grid.wet.filter((w) => w === 0).length;
+  };
+
+  it("feed the 大肥鲸 from its bowl until it burps and goes flat", () => {
+    const scene = createScene("dafeijing");
+    scene.layout(view);
+    const fullBowl = riceOf(scene, 0);
+    let fattest = 0;
+    let thinnest = Number.POSITIVE_INFINITY;
+    let leastRice = fullBowl;
+    let burps = 0;
+    for (let t = 0; t < 120; t += 1 / 24) {
+      const env = envFor({ maskAt: () => 1, time: t });
+      scene.step(1 / 24, env);
+      if (Math.round(t * 24) % 12) continue;
+      const w = whaleOf(scene, t);
+      fattest = Math.max(fattest, w.ink);
+      if (t > 60) thinnest = Math.min(thinnest, w.ink);
+      leastRice = Math.min(leastRice, riceOf(scene, t));
+      if (said(scene, env).includes("嗝")) burps++;
+    }
+    expect(fullBowl).toBeGreaterThan(20);
+    expect(leastRice).toBeLessThan(fullBowl * 0.7);
+    expect(burps).toBeGreaterThan(0);
+    expect(thinnest).toBeLessThan(fattest * 0.75);
+  });
+
+  it("keep the 大肥鲸 in view as it wanders", () => {
+    const scene = createScene("dafeijing");
+    scene.layout(view);
+    let seen = 0;
+    let samples = 0;
+    for (let t = 0; t < 180; t += 1 / 24) {
+      scene.step(1 / 24, envFor({ time: t }));
+      if (Math.round(t * 24) % 48) continue;
+      samples++;
+      if (whaleOf(scene, t).ink > 20) seen++;
+    }
+    expect(seen / samples).toBe(1);
+  });
+
+  it("scatter rice where ink drops and send the 大肥鲸 after it", () => {
+    const food = { x: 1050, y: 150 };
+    const run = (fed: boolean) => {
+      const scene = createScene("dafeijing");
+      scene.layout(view);
+      let t = 0;
+      let grains = 0;
+      for (; t < 8; t += 1 / 24) {
+        const drops = fed ? [{ ...food, age: t }] : [];
+        const env = envFor({ drops, time: t });
+        scene.step(1 / 24, env);
+        if (Math.abs(t - 0.5) < 1 / 48) {
+          scene.stamps(env, (glyph, x, y) => {
+            if (
+              scene.glyphs[glyph] === "米" &&
+              Math.hypot(x - food.x, y - food.y) < view.cell * 4
+            ) {
+              grains++;
+            }
+          });
+        }
+      }
+      const w = whaleOf(scene, t);
+      return { dist: Math.hypot(w.x - food.x, w.y - food.y), grains };
+    };
+    const fed = run(true);
+    expect(fed.grains).toBeGreaterThan(3);
+    expect(fed.dist).toBeLessThan(run(false).dist);
+  });
+
+  it("make the 大肥鲸 laugh when the pointer tickles it", () => {
+    const scene = createScene("dafeijing");
+    scene.layout(view);
+    let laughed = false;
+    for (let t = 0; t < 2; t += 1 / 24) {
+      const { x, y } = whaleOf(scene, t);
+      const env = envFor({ pointer: { x, y }, time: t });
+      scene.step(1 / 24, env);
+      if (said(scene, env).includes("哈")) laughed = true;
+    }
+    expect(laughed).toBe(true);
+  });
+
+  it("keep 大肥鲸 within the glyph budget at 1920×1080", () => {
+    const size = { cell: 16, cols: 122, height: 1080, rows: 70, width: 1920 };
+    const scene = createScene("dafeijing");
+    scene.layout(size);
+    let most = 0;
+    for (let t = 0; t < 120; t += 1 / 24) {
+      const env = envFor({
+        height: size.height,
+        maskAt: () => 1,
+        time: t,
+        width: size.width,
+      });
+      scene.step(1 / 24, env);
+      if (Math.round(t * 24) % 72 === 0) {
+        most = Math.max(
+          most,
+          whaleOf(scene, t, size).glyphs + said(scene, env).length,
+        );
+      }
+    }
+    expect(most).toBeLessThan(2600);
+  });
+
   it("unroll the 清明 scroll over time and keep it moving", () => {
     const engine = new InkPondEngine(null, { scene: "qingming" });
     engine.resize(1200, 800, 1, 16);

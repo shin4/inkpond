@@ -15,7 +15,7 @@
 | 文件 | 职责 | 不能做的事 |
 | --- | --- | --- |
 | `src/engine.ts` | 所有场景共用的部分：水波、落墨、留白、字形图集、平移；没有 canvas 时也能运行 | 绑定 DOM 事件、调用定时器或 `requestAnimationFrame`、读写存储 |
-| `src/scene.ts`、`src/scenes/` | 场景契约和各场景（山水、荷塘、清明上河、二十四节气、北冥）：画面布局、慢变层、鱼船行人鲸 | 同 engine；也不能碰 canvas，只通过 `emit` 交出要画的字 |
+| `src/scene.ts`、`src/scenes/` | 场景契约和各场景（山水、荷塘、清明上河、二十四节气、北冥、大肥鲸）：画面布局、慢变层、鱼船行人鲸 | 同 engine；也不能碰 canvas，只通过 `emit` 交出要画的字 |
 | `src/scenes/jieqi/` | 二十四节气：`calendar.ts` 按太阳黄经算节气，`term.ts` 是单个节气的契约，四季各一个文件，`index.ts` 把 24 个节气装成一个场景（共用字表、预热、跨节气墨晕过渡） | 同上；节气的 `cell()` 每次合成都会被逐格调用，快的东西放进 `stamps()` |
 | `src/controller.ts` | 帧循环、鼠标输入、留白区、字体加载、主题、可见性、性能档位 | 写死页面结构 |
 | `src/tiers.ts` | 档位和降级判断，纯函数 | 访问 DOM |
