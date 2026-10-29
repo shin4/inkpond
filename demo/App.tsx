@@ -14,6 +14,7 @@ const SCENE_LABELS: Record<SceneName, string> = {
   shanshui: "山水",
   jieqi: "二十四节气",
   beiming: "北冥",
+  dafeijing: "大肥鲸",
 };
 /** 节气: today's term, or one picked to look at. */
 type TermChoice = "today" | JieqiTerm;
@@ -58,7 +59,7 @@ export const App = () => {
   const [scene, setScene] = useState<SceneName>(() =>
     recall(
       "inkpond-demo.scene",
-      ["lotus", "qingming", "jieqi", "beiming"],
+      ["lotus", "qingming", "jieqi", "beiming", "dafeijing"],
       "shanshui",
     ),
   );

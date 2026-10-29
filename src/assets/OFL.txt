@@ -1,6 +1,6 @@
 Inkpond Glyphs (src/assets/inkpond-shanshui.woff2, inkpond-lotus.woff2,
-inkpond-qingming.woff2, inkpond-jieqi.woff2 and inkpond-beiming.woff2) is a
-Modified Version of Source Han Serif SC Medium
+inkpond-qingming.woff2, inkpond-jieqi.woff2, inkpond-beiming.woff2 and
+inkpond-dafeijing.woff2) is a Modified Version of Source Han Serif SC Medium
 2.003R: each file is subset to the characters of one scene (src/scenes/) and
 renamed, since the Reserved Font Name "Source" may not be used by a Modified
 Version. It remains under the SIL Open Font License 1.1 below, with the

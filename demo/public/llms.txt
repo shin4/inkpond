@@ -6,7 +6,7 @@
 
 Key facts:
 
-- Five scenes: `shanshui` (hills in mist, default), `lotus` (lotus pond whose koi avoid the pointer and swim to dropped ink), `qingming` (a handscroll of Along the River During the Qingming Festival that keeps unrolling), `jieqi` (the 24 solar terms, a picture each, chosen by today's date and switching live when the next term begins; `term: "qingming"` pins one, `date` picks a day; `jieqiAt(date)` returns a moment's term), `beiming` (the deep sea from above, a whale's shadow rising and sinking beneath the swell; it dives from the pointer and comes toward dropped ink).
+- Six scenes: `shanshui` (hills in mist, default), `lotus` (lotus pond whose koi avoid the pointer and swim to dropped ink), `qingming` (a handscroll of Along the River During the Qingming Festival that keeps unrolling), `jieqi` (the 24 solar terms, a picture each, chosen by today's date and switching live when the next term begins; `term: "qingming"` pins one, `date` picks a day; `jieqiAt(date)` returns a moment's term), `beiming` (the deep sea from above, a whale's shadow rising and sinking beneath the swell; it dives from the pointer and comes toward dropped ink), `dafeijing` (a comic big fat whale and a bowl of white rice drawn as bare paper; it eats until it swells, burps and spouts rice, chases rice scattered where ink drops, and laughs when the pointer pokes it).
 - Interaction: the pointer stirs ripples, a click or tap drops ink; elements marked `data-inkpond-avoid` keep a clear zone that koi, boats and walkers steer around.
 - Install: `npm i inkpond` (or the latest commit: `npm i github:shin4/inkpond`). Then `import "inkpond/inkpond.css"` and either `<InkPond scene="lotus" />` from `inkpond/react` (React 18+, marked "use client" so it renders from Next.js Server Components) or `createInkPond(canvas, { scene })` from `inkpond` in any framework (Vue, Svelte, Angular, plain JS).
 - Programmatic input: `pond.ripple(clientX, clientY, strength)` and `pond.drop(clientX, clientY)`.
@@ -27,7 +27,7 @@ Key facts:
 
 ## Demos
 
-- [Project page (English)](https://shin4.github.io/inkpond/en/) and [项目主页（中文）](https://shin4.github.io/inkpond/): all five scenes live, with tint and ink-depth controls
+- [Project page (English)](https://shin4.github.io/inkpond/en/) and [项目主页（中文）](https://shin4.github.io/inkpond/): all six scenes live, with tint and ink-depth controls
 - [Session demo](https://shin4.github.io/inkpond/session/): the background behind an AI chat start screen
 
 ## Optional

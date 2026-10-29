@@ -99,7 +99,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "How do I use it in Svelte?",
     },
     {
-      a: "Five: `shanshui` (the default) is two ranges of hills in mist; `lotus` is a lotus pond whose koi flee the pointer and swim to dropped ink; `qingming` is a handscroll that keeps unrolling, with city walls, a pagoda, the rainbow bridge, boats and walkers; `jieqi` is the twenty-four solar terms, a moving picture for each that changes with the date (or pin one with `term`); `beiming` is the deep sea seen from above, with a whale's shadow that rises and sinks, dives when the pointer touches it and comes toward dropped ink. Lotus, Qingming, the solar terms and beiming carry a touch of pale colour, or ink only with `tint: false`.",
+      a: "Six: `shanshui` (the default) is two ranges of hills in mist; `lotus` is a lotus pond whose koi flee the pointer and swim to dropped ink; `qingming` is a handscroll that keeps unrolling, with city walls, a pagoda, the rainbow bridge, boats and walkers; `jieqi` is the twenty-four solar terms, a moving picture for each that changes with the date (or pin one with `term`); `beiming` is the deep sea seen from above, with a whale's shadow that rises and sinks, dives when the pointer touches it and comes toward dropped ink; `dafeijing` is a comic big fat whale with a bowl of white rice (the rice is bare paper): it eats until it swells, burps and spouts rice, chases rice scattered where ink drops, and laughs when poked. Lotus, Qingming, the solar terms and both whales carry a touch of pale colour, or ink only with `tint: false`.",
       q: "What scenes are there?",
     },
     {
@@ -176,7 +176,7 @@ export const FAQ: Record<Lang, Entry[]> = {
       q: "在 Svelte 里怎么用？",
     },
     {
-      a: "有五个场景：`shanshui`（山水，默认）是两重远山与云雾；`lotus`（荷塘）是荷叶荷花，鲤鱼会躲开鼠标、游向落墨处；`qingming`（清明上河）是一卷不断展开的长卷，有城郭、宝塔、虹桥、船只和行人；`jieqi`（二十四节气）一节一画，按日期自动切换，也可以用 `term` 固定某一个；`beiming`（北冥）俯看深海，浪下一头鲸的影子时浮时沉，鼠标触到会下潜，落墨引它游近。荷塘、清明、节气和北冥带淡彩，也可以只用墨色。",
+      a: "有六个场景：`shanshui`（山水，默认）是两重远山与云雾；`lotus`（荷塘）是荷叶荷花，鲤鱼会躲开鼠标、游向落墨处；`qingming`（清明上河）是一卷不断展开的长卷，有城郭、宝塔、虹桥、船只和行人；`jieqi`（二十四节气）一节一画，按日期自动切换，也可以用 `term` 固定某一个；`beiming`（北冥）俯看深海，浪下一头鲸的影子时浮时沉，鼠标触到会下潜，落墨引它游近；`dafeijing`（大肥鲸）是一条搞笑的胖鲸守着一碗白米饭（饭是留白），吃到撑就打嗝喷米，落墨处撒米引它来吃，戳它会笑。荷塘、清明、节气和两条鲸带淡彩，也可以只用墨色。",
       q: "有哪些场景？",
     },
     {
@@ -243,7 +243,7 @@ const PAGE = {
       "。",
     ],
     licence: "代码以 MIT 许可发布 · 字体按 SIL OFL 1.1 授权",
-    nav: { scenes: "五卷", use: "用法" },
+    nav: { scenes: "六卷", use: "用法" },
   },
 } as const;
 
